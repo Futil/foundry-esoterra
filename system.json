@@ -1,0 +1,105 @@
+{
+  "name": "esoterra",
+  "title": "Esoterra",
+  "description": "The oficcial Esoterra system for FoundryVTT.",
+  "version": "0.0.1",
+  "minimumCoreVersion": "0.8.6",
+  "compatibleCoreVersion": "0.8.6",
+  "templateVersion": 2,
+  "author": "Futilrevenge",
+  "esmodules": [
+    "module/esoterra.js"
+  ],
+  "styles": [
+    "css/esoterra.css"
+  ],
+  "scripts": [],
+  "packs": [
+    {
+      "name": "weapons",
+      "label": "Weapons",
+      "system": "esoterra",
+      "path": "packs/weapons.db",
+      "entity": "Item"
+    },
+    {
+      "name": "armor",
+      "label": "Armor",
+      "system": "esoterra",
+      "path": "packs/armor.db",
+      "entity": "Item"
+    },
+    {
+      "name": "gear",
+      "label": "Gear",
+      "system": "esoterra",
+      "path": "packs/gear.db",
+      "entity": "Item"
+    },
+    {
+      "name": "conditions",
+      "label": "Conditions",
+      "system": "esoterra",
+      "path": "packs/conditions.db",
+      "entity": "Item"
+    },
+    {
+      "name": "spells",
+      "label": "Spells",
+      "system": "esoterra",
+      "path": "packs/spells.db",
+      "entity": "Item"
+    },
+    {
+      "name": "creatures",
+      "label": "Creatures",
+      "system": "esoterra",
+      "path": "packs/creatures.db",
+      "entity": "Actor"
+    },
+    {
+      "name": "tables",
+      "label": "Tables",
+      "system": "esoterra",
+      "path": "packs/tables.db",
+      "entity": "RollTable"
+    },
+    {
+      "name": "esoterra-macros",
+      "label": "Esoterra Macros",
+      "system": "esoterra",
+      "path": "packs/esoterra-macros.db",
+      "entity": "Macro"
+    }
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    },
+    {
+      "lang": "fr",
+      "name": "Français",
+      "path": "lang/fr.json"
+    },
+    {
+      "lang": "pt-BR",
+      "name": "Português (Brasil)",
+      "path": "lang/pt-BR.json"
+    },
+    {
+      "lang": "es",
+      "name": "Español (Spanish)",
+      "path": "lang/es.json"
+    }
+  ],
+  "gridDistance": 1,
+  "gridUnits": "in",
+  "primaryTokenAttribute": "health",
+  "secondaryTokenAttribute": "",
+  "url": "https://github.com/Futil/foundry-esoterra",
+  "manifest": "https://raw.githubusercontent.com/Futil/foundry-esoterra/main/system.json",
+  "download": "https://github.com/Futil/foundry-esoterra/archive/main.zip",
+  "license": "LICENSE.txt"
+}
