@@ -25,7 +25,10 @@ export class EsoterraActor extends Actor {
    * Prepare Character type specific data
    */
   _prepareCharacterData(actorData) {
+
     const data = actorData.data;
+
+
 
     // let armorBonus = 0;
     // const armors = this.getEmbeddedCollection("Item").filter(e => "armor" === e.type);
@@ -95,7 +98,37 @@ export class EsoterraActor extends Actor {
     d.render(true);
   }
 
-  rollItem(itemId, options = { event: null }) {
+  rollRisk() {
+    let attLabel = "Risk Roll";
+
+    //this.rollAttribute(attribute, "none");
+
+    let d = new Dialog({
+      title: "Select Risk Type",
+      content: "<h2> "+game.i18n.localize('Eso.RollRisk')+"</h2> <select style='margin-bottom:10px;'name='risky' id='risky'>\
+      <option value='Average'>"+game.i18n.localize('Eso.RiskAverage')+"</option>\
+      <option value='Low'>"+game.i18n.localize('Eso.RiskLow')+"</option>\
+      <option value='High'>"+game.i18n.localize('Eso.RiskHigh')+"</option></select> <br/>",
+      buttons: {
+        roll: {
+          icon: '<i class="fas fa-check"></i>',
+          label: game.i18n.localize('Eso.Roll'),
+          callback: (html) => this.rollRiskDice(html.find('[id=\"risky\"]')[0].value)
+        },
+        cancel: {
+          icon: '<i class="fas fa-times"></i>',
+          label: game.i18n.localize('Eso.Cancel'),
+          callback: () => { }
+        }
+      },
+      default: "roll",
+      close: () => { }
+    });
+    d.render(true);
+  }
+
+
+  rollItem(itemId, options = { event: null }, type = "") {
     let item = duplicate(this.getEmbeddedDocument("Item", itemId));
 
     if(item.type == "weapon"){
@@ -128,6 +161,9 @@ export class EsoterraActor extends Actor {
       // else
       // this.rollWeapon(item, item.data.weapon.dmg2);
     } else if(item.type=="spell"){
+
+
+
       //Select the stat of the roll.
       let t = new Dialog({
         title: "Select Stat",
@@ -148,6 +184,36 @@ export class EsoterraActor extends Actor {
         close: () => { }
       });
       t.render(true);
+    }  else if(item.type=="skill"){
+      let bonus = 10;
+      if(type == "focus") bonus = 15;
+      //Select the attribute to roll with.
+      let t = new Dialog({
+        title: game.i18n.localize('Eso.RollSelectStat'),
+        content: "<h2> "+game.i18n.localize('Eso.SkillAttribute')+" </h2> <select style='margin-bottom:10px;'name='attribute' id='attribute'>\
+        <option value='strength'>"+game.i18n.localize('Eso.Strength')+"</option>\
+        <option value='dexterity'>"+game.i18n.localize('Eso.Dexterity')+"</option>\
+        <option value='intellect'>"+game.i18n.localize('Eso.Will')+"</option>\
+        <option value='charisma'>"+game.i18n.localize('Eso.Charisma')+"</option>\
+        <option value='will'>"+game.i18n.localize('Eso.Intellect')+"</option>\
+        </select> <br/>",
+        buttons: {
+          roll: {
+            icon: '<i class="fas fa-check"></i>',
+            label: "Roll",
+            callback: (html) => this.rollAttribute(this.data.data.stats[html.find('[id=\"attribute\"]')[0].value], "", bonus, item)
+          },
+          cancel: {
+            icon: '<i class="fas fa-times"></i>',
+            label: "Cancel",
+            callback: () => { }
+          }
+        },
+        default: "roll",
+        close: () => { }
+      });
+      t.render(true);
+
     }
     else {
       this.chatDesc(item);
@@ -227,7 +293,13 @@ export class EsoterraActor extends Actor {
   }
 
   rollSpell(item = "", power = ""){
-    let die = power+"d6";
+    
+    let die = item.data.strainCost;
+    die = die.split("[POW]").join(""+power);
+    die = die.split("x").join("*");
+    console.log(die);
+
+    //power+"d6";
 
     let damageRoll = new Roll(die);
     damageRoll.evaluate({async: false});
@@ -239,27 +311,35 @@ export class EsoterraActor extends Actor {
     let usage = 0;
     let miscast = 0;
 
-    for(let i=0; i < parseInt(power); i++){
+    console.log(diceData);
+    for(let i=0; i < diceData.dice.length; i++){
+      
       if(i > 0)
       rollDiv += ', ' + diceData.dice[i].result;
       else
       rollDiv += '' + diceData.dice[i].result;
 
-      if(diceData.dice[i].result >= 4){
-        usage++;
-        if(diceData.dice[i].result == 6){
-          miscast++;
-        }
-      }
+      // if(diceData.dice[i].result >= 4){
+      //   usage++;
+      //   if(diceData.dice[i].result == 6){
+      //     miscast++;
+      //   }
+      // }
     }
 
     if(item.data.description == null){
       item.data.description = "";
     }
 
-    item.data.description = item.data.description.split("[DICE]").join("<strong style='text-decoration:underline' class='red'>"+power+"</strong>");
+    //Change without formatting
+    item.data.description = item.data.description.split("[P]").join(""+power);
+    item.data.description = item.data.description.split("[S]").join(""+damageRoll._total);
+
+    item.data.description = item.data.description.split("[POW]").join("<strong style='text-decoration:underline' class='red'>"+power+"<i class='fas fa-burn'></i></strong>");
     item.data.description = item.data.description.split("[SUM]").join("<strong style='text-decoration:underline' class='red'>"+damageRoll._total+"</strong>");
-    item.data.description += "<h2>"+game.i18n.localize('Eso.RollUsage')+": <strong>"+usage+"</strong></h2>";
+
+ 
+    item.data.description += "<h2>"+game.i18n.localize('Eso.RollStrain')+": <strong>"+damageRoll._total+"</strong></h2>";
     if(miscast){
       let miscastDesc = game.i18n.localize('Eso.RollMiscastDesc');
       miscastDesc = miscastDesc.replace("!miscast!", ""+miscast);
@@ -289,8 +369,8 @@ export class EsoterraActor extends Actor {
       pip: pipHtml,
       isSpell: true,
       isWeapon:true,
-      rollTitle: game.i18n.localize('Eso.RollSum')+"|"+game.i18n.localize('Eso.RollDice'), //The title of the roll.
-      rollText: damageRoll._total+'|'+power, //What is printed within the roll amount.
+      rollTitle: game.i18n.localize('Eso.RollStrain')+" | "+game.i18n.localize('Eso.RollPower'), //The title of the roll.
+      rollText: damageRoll._total+' | '+power, //What is printed within the roll amount.
       sum: damageRoll._total,
       dice: power,
       diceData
@@ -322,14 +402,18 @@ export class EsoterraActor extends Actor {
 
   }
 
-  rollAttribute(attribute, advantage, item = "", rollOver = false) {
+  rollAttribute(attribute, advantage, bonus = 0, item = "", rollOver = false) {
+
+    console.log(attribute);
+
     let attributeName = attribute.label?.charAt(0).toUpperCase() + attribute.label?.toLowerCase().slice(1);
     if (!attribute.label && isNaN(attributeName))
       attributeName = attribute.charAt(0)?.toUpperCase() + attribute.toLowerCase().slice(1);
 
     // Roll
-    let diceformular = "1d20";
+    let diceformular = "1d100";
 
+    console.log(attribute);
 
     let r = new Roll(diceformular, {});
     r.evaluate({async: false});
@@ -344,7 +428,17 @@ export class EsoterraActor extends Actor {
     if (item.type == "weapon") {
       damageRoll = new Roll(item.data.damage);
       damageRoll.evaluate({async: false});
+    }
 
+    let skillName = "";
+    if (item.type == "skill") {
+      skillName = item.name;
+      if(bonus > 10){
+        skillName += ' - ' + item.data.focus; 
+      }
+
+      // damageRoll = new Roll(item.data.damage);
+      // damageRoll.evaluate({async: false});
     }
 
     // Format Dice
@@ -353,7 +447,9 @@ export class EsoterraActor extends Actor {
     let mod = 0;
     if (attribute.mod > 0) mod = attribute.mod;
 
-    let targetValue = attribute.value + mod + (item == "" ? 0 : item.data.bonus);
+    let targetValue = attribute.value + mod + (item == "" ? 0 : bonus);
+    console.log(targetValue);
+    console.log(bonus);
 
     //Here's where we handle the result text.
     let resultText = "";
@@ -388,6 +484,8 @@ export class EsoterraActor extends Actor {
       item: item,
       targetValue: targetValue,
       useSkill: item.type == "skill" ? true : false,
+      skillBonus : bonus,
+      skillName : skillName,
       isWeapon: item.type == "weapon" ? true : false,
       advantage: advantage == "advantage" ? true : false,
       diceData
@@ -410,6 +508,94 @@ export class EsoterraActor extends Actor {
                 chatData.whisper = game.user._id;
             }
     */
+    let template = 'systems/esoterra/templates/chat/statroll.html';
+    renderTemplate(template, templateData).then(content => {
+      chatData.content = content;
+      if (game.dice3d) {
+        game.dice3d.showForRoll(r, game.user, true, chatData.whisper, chatData.blind).then(displayed => ChatMessage.create(chatData));
+
+      } else {
+        chatData.sound = CONFIG.sounds.dice;
+        ChatMessage.create(chatData);
+      }
+    });
+
+    //Roll the risk dice.
+    this.rollRiskDice("Average");
+
+  }
+
+  rollRiskDice(riskLevel) {
+    // Roll
+    let diceformular = "1d4";
+
+    let r = new Roll(diceformular, {});
+    r.evaluate({async: false});
+
+    let rSplit = ("" + r._total).split("");
+
+    // Format Dice
+    const diceData = this.formatDice(r);
+
+    let assetNum = 1;
+    let threatNum = 4;
+
+    if(riskLevel == "High"){
+      threatNum = 3;
+    }
+    if(riskLevel == "Low"){
+      assetNum = 2;
+    }
+    
+    let points = 0;
+    //Here's where we handle the result text.
+    let resultText = "No Result";//(r._total <= targetValue ? game.i18n.localize('Eso.RollSuccess') : game.i18n.localize('Eso.RollFailure'));
+    if(r._total <= assetNum){
+      points = this.data.data.assets.value;
+      if(points > 1) resultText = points + " Assets"
+      else resultText = points + " Asset"
+    } else if(r._total >= threatNum){
+      points = this.data.data.threats.value;
+      if(points > 1) resultText = points + " Threats"
+      else resultText = points + " Threat"
+    }
+    
+    let riskString = 'Average'
+    
+    let htmlString = `
+    <div class="rollcontainer">
+      <div class="flexrow" style="height: 46px;">
+        <div class="rollriskheader">Risk Dice - `+riskLevel+`</div>
+      </div>
+      <div class="rollrisk">[`+r._total + `] - ` +resultText+`</div>
+    </div>
+    `;
+
+
+    var templateData = {
+      actor: this,
+      stat: {
+        name: game.i18n.localize('Eso.Risk').toUpperCase()
+      },
+      data: {
+      },
+      HTML : htmlString,
+      useHTML: true,
+      diceData
+    };
+
+    let chatData = {
+      user: game.user.id,
+      speaker: {
+        actor: this.id,
+        token: this.token,
+        alias: this.name
+      }
+    };
+
+    let rollMode = game.settings.get("core", "rollMode");
+    if (["gmroll", "blindroll"].includes(rollMode)) chatData["whisper"] = ChatMessage.getWhisperRecipients("GM");
+
     let template = 'systems/esoterra/templates/chat/statroll.html';
     renderTemplate(template, templateData).then(content => {
       chatData.content = content;
@@ -516,6 +702,22 @@ export class EsoterraActor extends Actor {
     }
     if(item.type == "condition"){
       item.data.description += item.data.desc+"<br/><strong>Clear: </strong>"+item.data.clear;
+    }
+    if(item.type == "talent"){
+      item.data.description = item.data.description.split("[CON]").join('<i class="fas fa-head-side-brain"></i>');
+      item.data.description = item.data.description.split("[RANK]").join('<i class="fas fa-diamond"></i>');
+      item.data.description = item.data.description.split("[USE]").join('<i class="far fa-circle"></i>');
+      item.data.description = item.data.description.split("\n").join('<br/>');
+
+      let rankHtml = "<div style='margin-top: 5px;'>";
+      for (let i = 0; i < item.data.rank.max; i++) {
+        if (i < item.data.rank.value)
+        rankHtml += '<i class="fas fa-diamond">&nbsp;</i>'
+        else
+        rankHtml += '<i class="far fa-diamond">&nbsp;</i>';
+      }
+      rankHtml += "</div>";
+      pipHtml += rankHtml;
     }
 
     var templateData = {

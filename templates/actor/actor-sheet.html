@@ -1,5 +1,5 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
-
+<script src="https://kit.fontawesome.com/bef7d2141f.js" crossorigin="anonymous"></script>
   {{!-- Sheet Header --}}
   <header class="char-header header-grid">
 
@@ -12,7 +12,7 @@
           from 1 to 12 and will create that number of columns.  --}}
 
       <div class="header">
-        <div class="header-border" style="width: 200px; border-radius: 0 0 10px;">
+        <div class="header-border" style="width: 200px; border-radius: 0 0 10px; height: 100px;">
 
           <!-- PLAYER NAME -->
           <div class="headernamegrid">
@@ -31,7 +31,7 @@
                             placeholder="" data-dtype="String" /></div> -->
         </div>
 
-        <div class="" style="width: 100%; height: 97px;">
+        <div class="" style="width: 100%; height: 100px; margin-inline: 5px;">
           <!-- Name -->
           <div class="headernamegrid" style="background-color: rgb(22, 22, 22);">
             <div class="headerinputtext" style="color: white; flex: .15; text-align: left; margin-left: 9px;">{{localize "Eso.ActorName"}}</div>
@@ -46,17 +46,11 @@
             <div class="headerinputfield charname"><input name="data.description.pronouns" style="color: rgb(22,22,22);"
                 class="noborder" type="text" value="{{data.description.pronouns}}" placeholder="" data-dtype="String" />
             </div>
-
+            
+            <!-- XP -->
             <div class="headerinputtext" style="flex: auto; text-align: right; margin-right: 5px;">| {{localize "Eso.ActorXP"}}</div>
-            <div class="pip-button list-roll" style="margin: 8px;">
-              <i class="far fa-circle"></i>
-              <i class="far fa-circle"></i>
-              <i class="far fa-circle"></i>
-              <i class="far fa-circle"></i>
-              <i class="far fa-circle"></i>
-              <i class="far fa-circle"></i>
-              <i class="far fa-circle"></i>
-              <i class="far fa-circle"></i>
+            <div class="char-pip-button list-roll flex" data-key="xp" data-label="XP" data-max="8"  data-min="0">
+              {{{data.xp.html}}}
             </div>
           </div>
           <div class="seperatorLine"></div>
@@ -67,128 +61,274 @@
                 class="noborder" type="text" value="{{data.description.look}}" placeholder="" data-dtype="String" />
             </div>
           </div>
+
+          <div class="seperatorLine"></div>
+
         </div>
-        <img class="portrait" src="{{img}}" data-edit="img" title="{{name}}" height="250" width="250" style="width: 97px;" />
+        <img class="portrait" src="{{img}}" data-edit="img" title="{{name}}" height="250" width="250" style="width: 100px;" />
+
+      </div>
+
+      <div class="centercol">
+
+        <div class="grid grid-3col" style="margin-top: 0;">
+
+          <!-- Hits -->
+          <div class="resource healthspread minmaxtopstat">
+            <label for="data.hits.value" class="resource-label minmaxtext">{{localize "Eso.ActorHits"}}</label>
+
+            <div class="minmaxwrapper">
+              <input class="minmax-input darkGreyText" type="text" name="data.hits.value" value="{{data.hits.value}}"
+                data-dtype="Number" />
+              <div class="slant"></div>
+              <input class="minmax-input darkGreyText" type="text" name="data.hits.max"
+                value="{{data.hits.max}}" data-dtype="Number" />
+            </div>
+          </div>
+
+          <!-- Health -->
+          <div class="resource healthspread minmaxtopstat">
+            <label for="data.health.value" class="resource-label minmaxtext">{{localize "Eso.ActorHP"}}</label>
+
+            <div class="minmaxwrapper">
+              <input class="minmax-input darkGreyText" type="text" name="data.health.value" value="{{data.health.value}}"
+                data-dtype="Number" />
+              <div class="slant"></div>
+              <input class="minmax-input darkGreyText" type="text" name="data.health.max"
+                value="{{data.health.max}}" data-dtype="Number" />
+            </div>
+          </div>
+
+          <!-- Strain -->
+          <div class="resource healthspread minmaxtopstat">
+            <label for="data.strain.value" class="resource-label minmaxtext">{{localize "Eso.ActorStrain"}}</label>
+
+            <div class="minmaxwrapper">
+              <input class="minmax-input darkGreyText" type="text" name="data.strain.value" value="{{data.strain.value}}"
+                data-dtype="Number" />
+              <div class="slant"></div>
+              <input class="minmax-input darkGreyText" type="text" name="data.strain.max"
+                value="{{data.strain.max}}" data-dtype="Number" />
+            </div>
+          </div>
+
+          <!-- Dodge & Defense-->
+          <div class="minmaxtopstat">
+            <div style="margin-top: 10px;">
+              <div class="dodgewrapper">
+                <input class="minmax-input darkGreyText" style="transform: rotateZ(-45deg);"type="text" name="data.dodge.value" value="{{data.dodge.value}}"
+                  data-dtype="Number" />
+              </div>
+              <label for="data.dodge.value" class="resource-label dodgetext" style="z-index: 10; position: relative; top: -4px;">{{localize "Eso.ActorDodge"}}</label>
+            </div>
+
+            <div style="margin-top: -13px;">
+              <div class="resource-label defensetext" style="z-index: 10; position: relative; bottom: -13px;">
+                <div for="data.dodge.value" style="transform: skewX(15deg);" >{{localize "Eso.ActorDefense"}}</div>
+              </div>
+
+              <div class="defensewrapper">
+                <input class="minmax-input darkGreyText" type="text" name="data.defense.value" value="{{data.defense.value}}"
+                  data-dtype="Number" />
+              </div>
+              <div class="verticalFlex">
+                <div class="statblock" style="height: 20px;">
+                  <div class="current-max-label" style="">{{localize "Eso.ActorDodge"}} + {{localize "Eso.ItemArmor"}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Skills-->
+          <div class="skillframe">
+            <div class="skillheader">
+              <label for="data.stats.strength.value" class="resource-label skillHeaderText">{{localize "Eso.SkillCore"}} + 10</label>
+              <label for="data.dodge.value" class="resource-label dodgetext skillsborder" style="z-index: 10; position: relative; top: -10px;">{{localize "Eso.ActorSkills"}}</label>
+              <label for="data.stats.strength.value" class="resource-label skillHeaderText">{{localize "Eso.SkillFocus"}} + 15</label>
+            </div>
+            <div class="skillslot">
+              <!-- Skills! -->
+              {{#each skills as |item id|}}
+              <li class="skillitem item flexrow dropitem card-hover" data-item-id="{{item._id}}" id="{{item._id}}">
+                <!-- <div class="item-image"><img src="{{skill.img}}" title="{{skill.name}}" width="24" height="24"/></div> -->
+                <div class="skill-name skill-roll list-roll" data-key="core">{{item.name}}</div>
+                <div class="skill-name skill-roll list-roll" data-key="focus">{{item.data.focus}}</div>
+                <div class="item-controls" style="flex: 0; position: relative; right: -3px; bottom: -3px; font-size: 11px;">
+                  <a class="item-control item-edit" title="Edit Skill"><i class="fas fa-edit"></i></a>
+                  <a class="item-control item-delete" title="Delete Skill"><i class="fas fa-trash"></i></a>
+                </div>
+              </li>
+              {{/each}}
+            </div>
+          </div>
+        </div>
 
       </div>
 
 
-      <div class="centercol">
-        <div class="grid" style="margin-bottom: 5px; margin-top: 0;">
-          <div class="verticalFlex blockborder">
-            <!-- Level -->
-            <div class="statblock">
-              <label for="data.level.value" class="statName littleLabel">{{localize "Eso.ActorLvl"}} </label>
+      <div class="rightcol">
 
-              <input class="minmax-input darkGreyText" type="text" name="data.level.value" value="{{data.level.value}}"
-                data-dtype="Number" />
+
+        <!-- Assets -->
+        <div class="minmaxtopstat">
+          <label for="data.strain.value" class="resource-label minmaxtext">{{localize "Eso.ActorAssets"}}</label>
+          <div class="assetwrapper">
+            <div class="char-pip-button list-roll flex" data-key="assets" data-label="Assets" data-max="6" data-min="1">
+              {{{data.assets.html}}}
             </div>
           </div>
-          <div class="verticalFlex blockborder">
-            <!-- XP -->
-            <div class="statblock">
-              <label for="data.level.xp" class="statName littleLabel">{{localize "Eso.ActorXP"}} </label>
-
-              <input class="minmax-input darkGreyText" type="text" name="data.level.xp" value="{{data.level.xp}}"
-                data-dtype="Number" />
+        </div>
+      
+        <!-- Threats -->
+        <div class="minmaxtopstat">
+          <label for="data.strain.value" class="resource-label minmaxtext">{{localize "Eso.ActorThreats"}}</label>
+          <div class="assetwrapper" style="background:rgb(155, 155, 155);">
+            <div class="char-pip-button list-roll flex" data-key="threats" data-label="Threats" data-max="6" data-min="1">
+              {{{data.threats.html}}}
             </div>
           </div>
         </div>
 
-        <div class="creaturedescription">
-          {{editor content=data.biography target="data.biography" button=true owner=owner editable=true}}
+        <!-- Risk Roller -->
+        <div class="riskTextBackground">
+          <label for="data.stats.will.value" class="resource-label abilityText rollable risk-roll">{{localize "Eso.Risk"}}</label>
+        </div>
+
+        <!-- Wealth -->
+        <div class="verticalFlex blockborder" style="margin-top: 10px;">
+          <div class="statblock">
+            <label for="data.wealth.value" class="statName littleLabel" style="font-size: 1.1rem;">{{localize "Eso.Wealth"}}</label>
+
+            <input class="minmax-input darkGreyText" style="font-size: 1.2rem;" type="text" name="data.wealth.value" value="{{data.wealth.value}}"
+              data-dtype="Number" />
+          </div>
+        </div>
+
+        <div class="verticalFlex blockborder" style="margin-top: 10px;">
+
+        <div class="statblock">
+            <label for="data.debt.value" class="statName littleLabel">{{localize "Eso.Debt"}}</label>
+
+            <input class="minmax-input darkGreyText" style="font-size: 1.2rem;" type="text" name="data.debt.value" value="{{data.debt.value}}"
+              data-dtype="Number" />
+          </div>
         </div>
 
       </div>
 
       <div class="abilities">
-        <div class="verticalFlex blockborder">
-          <!-- Strength -->
-          <div class="statblock">
-            <label for="data.stat.strength.value" class="statName minmaxtext rollable stat-roll" data-key="strength"
-              data-roll="1d20" data-label="Strength">{{localize "Eso.ActorStr"}}</label>
-
-            <input class="minmax-input darkGreyText" type="text" name="data.stats.strength.value"
-              value="{{data.stats.strength.value}}" data-dtype="Number" />
-
-            <div class="slant" style="transform: skewX(0deg);"></div>
-
-            <input class="minmax-input darkGreyText" type="text" name="data.stats.strength.max"
-              value="{{data.stats.strength.max}}" data-dtype="Number" />
+        
+        <div class="verticalFlex">
+          <div class="statblock" style="height: 15px;">
+            <div style="width:33%;"></div>
+            <div class="current-max-label">{{localize "Eso.Current"}}</div>
+            <div class="current-max-label">{{localize "Eso.Max"}}</div>
           </div>
+        </div>
 
-          <div class="seperatorLine"></div>
+        <div class="verticalFlex">
+
+          <!-- Strength -->
+          <div class="abilityTop">
+            <div class="abilityTextBackground" style="top: 5px;">
+              <label for="data.statss.strength.value" class="resource-label abilityText rollable stat-roll" data-key="strength"
+              data-roll="1d100" data-label="Strength">{{localize "Eso.ActorStr"}}</label>
+            </div>
+            <div class="minmaxwrapper">
+              <input class="minmax-input darkGreyText" type="text" name="data.stats.strength.value" value="{{data.stats.strength.value}}"
+                data-dtype="Number" />
+              <div class="slant" style="transform: skewX(-15deg);"></div>
+              <input class="minmax-input darkGreyText" type="text" name="data.stats.strength.max"
+                value="{{data.stats.strength.max}}" data-dtype="Number" />
+            </div>
+          </div>
 
           <!-- Dexterity -->
-          <div class="statblock">
-            <label for="data.stat.dexterity.value" class="statName minmaxtext rollable stat-roll" data-key="dexterity"
-              data-roll="1d20" data-label="Dexterity">{{localize "Eso.ActorDex"}}</label>
-
-            <input class="minmax-input darkGreyText" type="text" name="data.stats.dexterity.value"
-              value="{{data.stats.dexterity.value}}" data-dtype="Number" />
-
-            <div class="slant" style="transform: skewX(0deg);"></div>
-
-            <input class="minmax-input darkGreyText" type="text" name="data.stats.dexterity.max"
-              value="{{data.stats.dexterity.max}}" data-dtype="Number" />
-
+          <div class="abilityTop">
+            <div class="abilityTextBackground" style="top: 5px;">
+              <label for="data.statss.dexterity.value" class="resource-label abilityText rollable stat-roll" data-key="dexterity"
+              data-roll="1d100" data-label="Dexterity">{{localize "Eso.ActorDex"}}</label>
+            </div>
+            <div class="minmaxwrapper">
+              <input class="minmax-input darkGreyText" type="text" name="data.stats.dexterity.value" value="{{data.stats.dexterity.value}}"
+                data-dtype="Number" />
+              <div class="slant" style="transform: skewX(-15deg);"></div>
+              <input class="minmax-input darkGreyText" type="text" name="data.stats.dexterity.max"
+                value="{{data.stats.dexterity.max}}" data-dtype="Number" />
+            </div>
           </div>
-          <div class="seperatorLine"></div>
+
+          <!-- Intellect -->
+          <div class="abilityTop">
+            <div class="abilityTextBackground" style="top: 5px;">
+              <label for="data.stats.intellect.value" class="resource-label abilityText rollable stat-roll" data-key="intellect"
+              data-roll="1d100" data-label="Intellect">{{localize "Eso.ActorInt"}}</label>
+            </div>
+            <div class="minmaxwrapper">
+              <input class="minmax-input darkGreyText" type="text" name="data.stats.intellect.value" value="{{data.stats.intellect.value}}"
+                data-dtype="Number" />
+              <div class="slant" style="transform: skewX(-15deg);"></div>
+              <input class="minmax-input darkGreyText" type="text" name="data.stats.intellect.max"
+                value="{{data.stats.intellect.max}}" data-dtype="Number" />
+            </div>
+          </div>
+
+          <!-- Charisma -->
+          <div class="abilityTop">
+            <div class="abilityTextBackground" style="top: 5px;">
+              <label for="data.stats.charisma.value" class="resource-label abilityText rollable stat-roll" data-key="charisma"
+              data-roll="1d100" data-label="Charisma">{{localize "Eso.ActorCha"}}</label>
+            </div>
+            <div class="minmaxwrapper">
+              <input class="minmax-input darkGreyText" type="text" name="data.stats.charisma.value" value="{{data.stats.charisma.value}}"
+                data-dtype="Number" />
+              <div class="slant" style="transform: skewX(-15deg);"></div>
+              <input class="minmax-input darkGreyText" type="text" name="data.stats.charisma.max"
+                value="{{data.stats.charisma.max}}" data-dtype="Number" />
+            </div>
+          </div>
 
           <!-- Will -->
-          <div class="statblock">
-            <label for="data.stat.will.value" class="statName minmaxtext rollable stat-roll" data-key="will"
-              data-roll="1d20" data-label="Will">{{localize "Eso.ActorWil"}}</label>
-
-            <input class="minmax-input darkGreyText" type="text" name="data.stats.will.value"
-              value="{{data.stats.will.value}}" data-dtype="Number" />
-
-            <div class="slant" style="transform: skewX(0deg);"></div>
-
-            <input class="minmax-input darkGreyText" type="text" name="data.stats.will.max"
-              value="{{data.stats.will.max}}" data-dtype="Number" />
+          <div class="abilityTop">
+            <div class="abilityTextBackground" style="top: 5px;">
+              <label for="data.stats.will.value" class="resource-label abilityText rollable stat-roll" data-key="will"
+              data-roll="1d100" data-label="Will">{{localize "Eso.ActorWil"}}</label>
+            </div>
+            <div class="minmaxwrapper">
+              <input class="minmax-input darkGreyText" type="text" name="data.stats.will.value" value="{{data.stats.will.value}}"
+                data-dtype="Number" />
+              <div class="slant" style="transform: skewX(-15deg);"></div>
+              <input class="minmax-input darkGreyText" type="text" name="data.stats.will.max"
+                value="{{data.stats.will.max}}" data-dtype="Number" />
+            </div>
           </div>
+
+          <!-- Strength -->
+          <!-- <div class="statblock">
+            <label for="data.stats.strength.value" class="statName minmaxtext rollable stat-roll" style="color:white;" data-key="strength"
+              data-roll="1d20" data-label="Strength">{{localize "Eso.ActorStr"}}</label>
+
+            <input class="minmax-input darkGreyText" type="text" name="data.statss.strength.value"
+              value="{{data.statss.strength.value}}" data-dtype="Number" />
+
+            <div class="slant" style="transform: skewX(-15deg);"></div>
+
+            <input class="minmax-input darkGreyText" type="text" name="data.statss.strength.max"
+              value="{{data.statss.strength.max}}" data-dtype="Number" />
+          </div> -->
+
 
         </div>
 
+
+
+<!-- 
         <div class="verticalFlex">
           <div class="statblock" style="height: 20px;">
             <div style="width:33%;"></div>
-            <div class="current-max-label">{{localize "Eso.Current"}}</div>
-            <div class="current-max-label">{{localize "Eso.Max"}}</div>
+
           </div>
-        </div>
-
-        <div class="verticalFlex blockborder">
-          <!-- HP -->
-          <div class="statblock">
-            <label for="data.stat.will.value" class="statName minmaxtext">{{localize "Eso.ActorHP"}} </label>
-
-            <input class="minmax-input darkGreyText" type="text" name="data.health.value" value="{{data.health.value}}"
-              data-dtype="Number" />
-            <div class="slant" style="transform: skewX(0deg);"></div>
-            <input class="minmax-input darkGreyText" type="text" name="data.health.max" value="{{data.health.max}}"
-              data-dtype="Number" />
-          </div>
-        </div>
-
-        <div class="verticalFlex">
-          <div class="statblock" style="height: 20px;">
-            <div style="width:33%;"></div>
-            <div class="current-max-label">{{localize "Eso.Current"}}</div>
-            <div class="current-max-label">{{localize "Eso.Max"}}</div>
-          </div>
-        </div>
-
-        <div class="verticalFlex blockborder">
-          <!-- Pips -->
-          <div class="statblock">
-            <label for="data.pips.value" class="statName littleLabel">{{localize "Eso.Pips"}}</label>
-
-            <input class="minmax-input darkGreyText" type="text" name="data.pips.value" value="{{data.pips.value}}"
-              data-dtype="Number" />
-          </div>
-        </div>
+        </div> -->
 
       </div>
     </div>
@@ -197,6 +337,7 @@
   {{!-- Sheet Tab Navigation --}}
   <nav class="esoterra sheet-tabs tabs" style="line-height: 29px; border-top: 2px solid rgb(22, 22, 22); border-bottom: 2px solid rgb(22, 22, 22);" data-group="primary">
     <a class="tab-select" data-tab="drag">{{localize "Eso.Inventory"}}</a>
+    
     <a class="tab-select" data-tab="notes">{{localize "Eso.Notes"}}</a>
     <!-- <a class="tab-select" data-tab="items">Items</a> -->
 
@@ -245,84 +386,172 @@
             <div class="item-container-controls">
               <a class="item-control item-create" title="Create Item" data-type="item"><i class="fas fa-plus"></i> {{localize "Eso.InventoryAddItem"}}</a>
             </div>
-            <!-- Main Paw -->
-            <div class="item-slot-dashed" style="transform: translate3d(-270px, -150px, 0px);">
-              <div class="item-slot-header">
-                {{localize "Eso.InventoryMainPaw"}}
-              </div>
-            </div>
-            <!-- Off Paw -->
-            <div class="item-slot-dashed" style="transform: translate3d(-270px, -20px, 0px);">
-              <div class="item-slot-header">
-                {{localize "Eso.InventoryOffPaw"}}
-              </div>
-              <div class="item-slot-footer">{{localize "Eso.InventoryCarried"}}</div>
-            </div>
 
-            <!-- Body -->
-            <div class="item-slot-dashed" style="transform: translate3d(-140px, -150px, 0px);">
-              <div class="item-slot-header">
-                {{localize "Eso.InventoryBody"}}
+            <div style="transform: translate3d(-80px, -65px, 0px);">
+              <!-- Main Bag -->
+              <div class="item-bag-container" style="transform: translate3d(-260px, -250px, 0px);">
+                <div class="" style="transform: translate3d(-141px, -30px, 0px);">
+                  <div class="item-slot-header" style="color: rgb(22, 22, 22);">
+                    Body & Equipment
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="item-slot-dashed" style="transform: translate3d(-140px, -20px, 0px);">
-              <div class="item-slot-header">
-                {{localize "Eso.InventoryBody"}}
+              <!-- Main Paw -->
+              <div class="item-slot-dashed" style="transform: translate3d(-260px, -250px, 0px);">
+                <div class="item-slot-header">
+                  {{localize "Eso.InventoryMainHand"}}
+                </div>
               </div>
-              <div class="item-slot-footer">{{localize "Eso.InventoryWorn"}}</div>
-            </div>
+              <!-- Off Paw -->
+              <div class="item-slot-dashed" style="transform: translate3d(-260px, -122px, 0px);">
+                <div class="item-slot-header">
+                  {{localize "Eso.InventoryOffHand"}}
+                </div>
+                <div class="item-slot-footer">{{localize "Eso.InventoryCarried"}}</div>
+              </div>
 
-
-            <!-- Main Paw -->
-            <div class="item-bag-container" style="transform: translate3d(140px, -85px, 0px);">
-              <div class="item-slot-footer">{{localize "Eso.InventoryPack"}}</div>
-            </div>
-            <div class="item-slot-dashed" style="transform: translate3d(10px, -150px, 0px);">
-              <div class="item-bag-text">
-                1
+              <!-- Body -->
+              <div class="item-slot-dashed" style="transform: translate3d(-132px, -250px, 0px);">
+                <div class="item-slot-header">
+                  {{localize "Eso.InventoryBody"}}
+                </div>
               </div>
-            </div>
-            <div class="item-slot-dashed" style="transform: translate3d(140px, -150px, 0px);">
-              <div class="item-bag-text">
-                2
+              <div class="item-slot-dashed" style="transform: translate3d(-132px, -122px, 0px);">
+                <div class="item-slot-header">
+                  {{localize "Eso.InventoryBody"}}
+                </div>
+                <div class="item-slot-footer">{{localize "Eso.InventoryWorn"}}</div>
               </div>
-            </div>
-            <div class="item-slot-dashed" style="transform: translate3d(270px, -150px, 0px);">
-              <div class="item-bag-text">
-                3
+              <!-- Body -->
+              <div class="item-slot-dashed" style="transform: translate3d(-4px, -250px, 0px);">
+                <div class="item-slot-header">
+                  {{localize "Eso.InventoryBody"}}
+                </div>
               </div>
-            </div>
-            <div class="item-slot-dashed" style="transform: translate3d(10px, -20px, 0px);">
-              <div class="item-bag-text">
-                4
-              </div>
-            </div>
-            <div class="item-slot-dashed" style="transform: translate3d(140px, -20px, 0px);">
-              <div class="item-bag-text">
-                5
-              </div>
-            </div>
-            <div class="item-slot-dashed" style="transform: translate3d(270px, -20px, 0px);">
-              <div class="item-bag-text">
-                6
+              <div class="item-slot-dashed" style="transform: translate3d(-4px, -122px, 0px);">
+                <div class="item-slot-header">
+                  {{localize "Eso.InventoryBody"}}
+                </div>
+                <div class="item-slot-footer">{{localize "Eso.InventoryWorn"}}</div>
               </div>
             </div>
 
-            <!-- Grit -->
-            <div class="item-slot-dashed" style="transform: translate3d(-205px, 150px, 0px); width:18.5em;">
-              <div class="item-slot-header">
-                {{localize "Eso.InventoryGrit"}}
+            <!-- Backpack -->
+            <div style="transform: translate3d(-80px, 217px, 0px);">
+              <!-- Main Bag -->
+              <div class="item-bag-container" style="transform: translate3d(-260px, -250px, 0px); background-color: rgba(220,220,220,1);">
+                <div class="item-slot-footer">{{localize "Eso.InventoryPack"}}</div>
+              </div>
+              <!-- Main Paw -->
+              <div class="item-slot-dashed" style="transform: translate3d(-260px, -250px, 0px);">
+                <div class="item-bag-text">
+                  1
+                </div>
+              </div>
+              <!-- Off Paw -->
+              <div class="item-slot-dashed" style="transform: translate3d(-260px, -122px, 0px);">
+                <div class="item-bag-text">
+                  2
+                </div>
+              </div>
+
+              <!-- Body -->
+              <div class="item-slot-dashed" style="transform: translate3d(-132px, -250px, 0px);">
+                <div class="item-bag-text">
+                  3
+                </div>
+              </div>
+              <div class="item-slot-dashed" style="transform: translate3d(-132px, -122px, 0px);">
+                <div class="item-bag-text">
+                  4
+                </div>
+              </div>
+              <!-- Body -->
+              <div class="item-slot-dashed" style="transform: translate3d(-4px, -250px, 0px);">
+                <div class="item-bag-text">
+                  5
+                </div>
+              </div>
+              <div class="item-slot-dashed" style="transform: translate3d(-4px, -122px, 0px);">
+                <div class="item-bag-text">
+                  6
+                </div>
               </div>
             </div>
+
+            <!-- Concentration Slots -->
+            <div style="transform: translate3d(-70px, -65px, 0px);">
+              <!-- Main Mental -->
+              <div class="item-bag-container" style="transform: translate3d(140px, -250px, 0px); width:258px; height:130px;">
+                <div class="" style="transform: translate3d(-83px, -30px, 0px);">
+                  <div class="item-slot-header" style="color: rgb(22, 22, 22);">
+                    Mind & Talents
+                  </div>
+                </div>
+              </div>
+
+              <div class="item-slot-dashed" style="transform: translate3d(140px, -250px, 0px);">
+                <div class="item-slot-header">
+                  Concentration
+                </div>
+              </div>
+              <div class="item-slot-dashed" style="transform: translate3d(268px, -250px, 0px);">
+                <div class="item-slot-header">
+                  Concentration
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Mental Slots -->
+            <div style="transform: translate3d(-70px, 90px, 0px);">
+              <!-- Main Mental -->
+              <div class="item-bag-container" style="transform: translate3d(140px, -250px, 0px); width:258px; height:386px; background-color: rgba(220,220,220,1);">
+                
+              </div>
+
+              <div class="item-slot-dashed" style="transform: translate3d(140px, -250px, 0px);">
+                <div class="item-bag-text">
+                  1
+                </div>
+              </div>
+              <div class="item-slot-dashed" style="transform: translate3d(268px, -250px, 0px);">
+                <div class="item-bag-text">
+                  2
+                </div>
+              </div>
+              <div class="item-slot-dashed" style="transform: translate3d(140px, -122px, 0px);">
+                <div class="item-bag-text">
+                  3
+                </div>
+              </div>
+              <div class="item-slot-dashed" style="transform: translate3d(268px, -122px, 0px);">
+                <div class="item-bag-text">
+                  4
+                </div>
+              </div>
+              <div class="item-slot-dashed" style="transform: translate3d(140px, 6px, 0px);">
+                <div class="item-bag-text">
+                  5
+                </div>
+              </div>
+              <div class="item-slot-dashed" style="transform: translate3d(268px, 6px, 0px);">
+                <div class="item-bag-text">
+                  6
+                </div>
+              </div>
+            </div>
+
+
             <!-- Bank -->
-            <div class="item-slot-dashed" style="transform: translate3d(140px, 150px, 0px); width:27.5em;">
+            <!-- <div class="item-slot-dashed" style="transform: translate3d(-132px, 140px, 0px); width:386px; height:300px;">
               <div class="item-slot-header">
                 {{localize "Eso.InventoryBank"}}
               </div>
-            </div>
+            </div> -->
 
-            {{#each items as |item id|}}
-            <div class="item-card item dragItems dropitem" style="width: {{item.data.size.x}}; height: {{item.data.size.y}}; transform: translate3d({{item.data.sheet.currentX}}px,{{item.data.sheet.currentY}}px, 0); z-index: {{item.data.sheet.zIndex}};"
+            {{#each gear as |item id|}}
+            <div class="card-hover item-card item dragItems dropitem" style="width: {{item.data.size.x}}; height: {{item.data.size.y}}; transform: translate3d({{item.data.sheet.currentX}}px,{{item.data.sheet.currentY}}px, 0); z-index: {{item.data.sheet.zIndex}};"
               data-item-id="{{item._id}}" id="{{item._id}}">
               <!-- Include a header DIV with the same name as the draggable DIV, followed by "header" -->
               {{#if item.data.clear}} <!-- If it's a condition -->
@@ -331,18 +560,40 @@
               </div>
               {{else}}
               <div class="item-card-header flex-between" data-item-id="{{item._id}}">
-                {{#if item.data.isSpell}}
-                <span class="item-card-star">★</span>
-                {{/if}}
                 <div class="list-roll item-roll item-card-title">
                   {{item.name}}
                 </div>
+                {{#if item.data.isSpell}}
+                <i class="item-card-star fas fa-sparkles"></i>
+                {{/if}}
+                {{#if item.data.talent}}
+                <i class="item-card-star fas fa-cog"></i>
+                {{/if}}
               </div>
               {{/if}}
-              <div class="grid grid-3col pip-button list-roll" style="width: 50px; margin: 5px;">
+              <div class="item-card-pip-column pip-button list-roll" style="width: 5px; margin: 5px;">
                 {{{item.data.pips.html}}}
               </div>
-              <div class="item-card-tag">{{item.data.tag}}</div>
+              <!-- Footer stuff -->
+              <div class="item-card-footer flex-between" data-item-id="{{item._id}}">
+                <div class="list-roll item-roll item-card-title">
+                  <div class="item-card-tag">{{item.data.tag}}</div>
+                </div>
+                {{#if item.data.isSpell}}
+                  <label class="item-card-footer-right">
+                  {{{item.data.footerHTML}}}
+                  </label>
+                {{/if}}
+                {{#if item.data.talent}}
+                  <div class="item-card-rank-bar rank-button list-roll" style="width: 5px; margin: 5px;">
+                    {{{item.data.rank.html}}}
+                  </div>
+                  <div class="item-card-xp">
+                  {{{item.data.cost}}}XP
+                  </div>
+                {{/if}}
+              </div>
+              <!-- Weapon stuff -->
               {{#if item.data.isWeapon}}
               {{#if item.data.weapon.canSwap}}
               <div class="item-card-damage list-roll damage-swap" style="font-size: 1.3em;">{{item.data.weapon.dmg1}}
@@ -364,10 +615,17 @@
               </div>
               {{/if}}
               {{#if item.data.desc}}
-              <div class="item-card-desc">
+                <div class="item-card-condition-desc">
                 {{item.data.desc}}
-              </div>
+                </div>
               {{/if}}
+
+              {{#if item.data.descHTML}}
+                <div class="item-card-talent-desc">
+                {{{item.data.descHTML}}}
+                </div>
+              {{/if}}
+
               {{#if item.data.clear}}
               <div class="item-card-clear">
                 {{localize "Eso.CardClear"}}:
@@ -377,8 +635,10 @@
               </div>
               {{/if}}
               <img src="{{item.img}}" title="{{item.name}}" class="item-card-image" style="transform:rotate({{item.data.sheet.rotation}}deg) scale({{item.data.size.aspect}});"/>
-              <div class="item-controls item-card-chat">
+              <div class="item-controls item-card-chat hide">
+                {{#unless item.data.descHTML}}
                 <a class="item-control item-rotate" title="Rotate Item"><i class="fas fa-sync-alt"></i></a>
+                {{/unless}}
                 <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
                 <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                 <!-- <i class="fas fa-comment-dots list-roll description-roll"></i> -->

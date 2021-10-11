@@ -23,6 +23,8 @@ export class EsoterraActorSheet extends ActorSheet {
     const data = super.getData();
     data.dtypes = ["String", "Number", "Boolean"];
 
+    const superData = data.data.data;
+
     // Prepare items.
     if (this.actor.data.type == 'character') {
       this._prepareCharacterItems(data);
@@ -44,10 +46,11 @@ export class EsoterraActorSheet extends ActorSheet {
    */
   _prepareCharacterItems(sheetData) {
 
-    const actorData = sheetData.actor;
+    const actorData = sheetData.data;
 
     // Initialize containers.
     const gear = [];
+    const skills = [];
 
     // Iterate through items, allocating to containers
     // let totalWeight = 0;
@@ -55,69 +58,114 @@ export class EsoterraActorSheet extends ActorSheet {
       let item = i.data;
       i.img = i.img || DEFAULT_TOKEN;
 
-      // We'll handle the pip html here.
-      if (item.pips == null) {
-        item.pips = {
-          "value": 0,
-          "max": 0,
-          "html": ""
-        };
-      }
-      let pipHtml = "";
-      for (let i = 0; i < item.pips.max; i++) {
-        if (i < item.pips.value)
-          pipHtml += '<i class="fas fa-circle"></i>'
-        else
-          pipHtml += '<i class="far fa-circle"></i>';
-      }
-      item.pips.html = pipHtml;
-      // End of the pip handler
-
-      // Now we'll set tags
-      if (i.type == "item") { item.isWeapon = false; item.isCondition = false; }
-      else if (i.type == "weapon") {
-        item.isWeapon = true;
-        item.isCondition = false;
-
-        if (item.weapon.dmg2 != "") {
-          item.weapon.canSwap = true;
-        } else {
-          item.weapon.canSwap = false;
+      if(i.type === "skill"){
+        skills.push(i);
+      } else {
+        // We'll handle the pip html here.
+        if (item.pips == null) {
+          item.pips = {
+            "value": 0,
+            "max": 0,
+            "html": ""
+          };
         }
-      }
-
-      if (item.size == undefined) {
-        item.size = {
-          "width": 1,
-          "height": 1,
-          "x": "9em",
-          "y": "9em"
+        let pipHtml = "";
+        for (let i = 0; i < item.pips.max; i++) {
+          if (i < item.pips.value){
+            pipHtml += '<i class="fas fa-circle"></i>';
+          }
+          else{
+            if(item.pips.level == 0 || i < item.pips.level){
+              pipHtml += '<i class="far fa-circle"></i>';
+            } else {
+              pipHtml += '<i class="far fa-circle" style="color: rgba(55,55,55,0.5)"></i>';
+            }
+          }
         }
+        item.pips.html = pipHtml;
+        // End of the pip handler
+
+        // Now we'll set tags
+        if (i.type == "item") { item.isWeapon = false; item.isCondition = false; }
+        else if (i.type == "weapon") {
+          item.isWeapon = true;
+          item.isCondition = false;
+
+          if (item.weapon.dmg2 != "") {
+            item.weapon.canSwap = true;
+          } else {
+            item.weapon.canSwap = false;
+          }
+        }
+
+        if (item.size == undefined) {
+          item.size = {
+            "width": 1,
+            "height": 1,
+            "x": "9em",
+            "y": "9em"
+          }
+        }
+        
+        //Spell stuff / Setting the footer text
+        if (i.type == "spell"){
+          let strainHTML = '';
+          if(item.strainCost != undefined){
+            strainHTML = item.strainCost.split("[POW]").join('<i class="fas fa-burn"></i>');
+          }
+          let maxHTML = '';
+          if(item.maxPower > 0) maxHTML = ' : MAX ' +item.maxPower+ '<i class="fas fa-burn"></i>';
+          item.footerHTML= strainHTML + maxHTML;
+        } else if(i.type == "talent"){
+          if(item.descTalent != undefined){
+            item.descHTML = item.descTalent;
+
+            item.descHTML = item.descHTML.split("[CON]").join('<i class="fas fa-head-side-brain"></i>');
+            item.descHTML = item.descHTML.split("[RANK]").join('<i class="fas fa-diamond"></i>');
+            item.descHTML = item.descHTML.split("[USE]").join('<i class="far fa-circle"></i>');
+            item.descHTML = item.descHTML.split("\n").join('<br/>');
+
+          }
+          item.rank.html = "";
+
+          //Rank HTML
+          for (let i = 0; i < item.rank.max; i++) {
+            if (i < item.rank.value){
+              item.rank.html += '<i class="fas fa-diamond"></i>';
+            }
+            else{
+              item.rank.html += '<i class="far fa-diamond"></i>';
+            }
+          }
+
+        }
+
+        
+        if(item.sheet.rotation == undefined)
+        item.sheet.rotation = 0;
+
+        item.size.aspect = (item.sheet.rotation == -90 ? (item.size.width > item.size.height ? item.size.width / item.size.height : item.size.height / item.size.width) : 1);
+
+        item.sheet.curHeight = (item.sheet.rotation == -90 ? item.size.width : item.size.height);
+        item.sheet.curWidth = (item.sheet.rotation == -90 ? item.size.height : item.size.width);
+
+        item.size.x = (item.sheet.curWidth * 8 + item.sheet.curWidth) + "em";
+        item.size.y = (item.sheet.curHeight * 8 + item.sheet.curHeight) + "em";
+
+        let roundScale = 5;
+        let xPos = Math.round(item.sheet.currentX / roundScale) * roundScale;
+        let yPos = Math.round(item.sheet.currentY / roundScale) * roundScale;
+        item.sheet.currentX = xPos;
+        item.sheet.currentY = yPos;
+        item.sheet.zIndex = xPos + yPos + 1000;
+        
+
+        gear.push(i);
       }
-      
-      if(item.sheet.rotation == undefined)
-      item.sheet.rotation = 0;
-
-      item.size.aspect = (item.sheet.rotation == -90 ? (item.size.width > item.size.height ? item.size.width / item.size.height : item.size.height / item.size.width) : 1);
-
-      item.sheet.curHeight = (item.sheet.rotation == -90 ? item.size.width : item.size.height);
-      item.sheet.curWidth = (item.sheet.rotation == -90 ? item.size.height : item.size.width);
-
-      item.size.x = (item.sheet.curWidth * 8 + item.sheet.curWidth) + "em";
-      item.size.y = (item.sheet.curHeight * 8 + item.sheet.curHeight) + "em";
-
-      let roundScale = 5;
-      let xPos = Math.round(item.sheet.currentX / roundScale) * roundScale;
-      let yPos = Math.round(item.sheet.currentY / roundScale) * roundScale;
-      item.sheet.currentX = xPos;
-      item.sheet.currentY = yPos;
-      item.sheet.zIndex = xPos + yPos + 1000;
-      
-
-      gear.push(i);
     }
     // Assign and return
     actorData.gear = gear;
+    actorData.skills = skills;
   }
 
   /** @override */
@@ -201,6 +249,21 @@ export class EsoterraActorSheet extends ActorSheet {
       this.actor.rollStat(attribute);
     });
 
+    // Rollable Attributes
+    html.find('.skill-roll').click(ev => {
+      const li = ev.currentTarget.closest(".item");
+      const div = $(ev.currentTarget);
+      const type = div.data("key");
+      // const attribute = this.actor.data.data.stats[statName];
+      this.actor.rollItem(li.dataset.itemId, {event: ev}, type);
+    });
+
+    // Rollable Attributes
+    html.find('.risk-roll').click(ev => {
+      const div = $(ev.currentTarget);
+      this.actor.rollRisk();
+    });
+
     // Rollable Item/Anything with a description that we want to click on.
     html.find('.item-roll').click(ev => {
       const li = ev.currentTarget.closest(".item");
@@ -227,7 +290,7 @@ export class EsoterraActorSheet extends ActorSheet {
       let amount = item.data.pips.value;
 
       if (event.button == 0) {
-        if (amount < item.data.pips.max) {
+        if (amount < item.data.pips.max && (amount < item.data.pips.level || item.data.pips.level == 0)) {
           item.data.pips.value = Number(amount) + 1;
         }
       } else if (event.button == 2) {
@@ -237,6 +300,79 @@ export class EsoterraActorSheet extends ActorSheet {
       }
 
       this.actor.updateEmbeddedDocuments('Item', [item]);
+    });
+
+    html.on('mousedown', '.rank-button', ev => {
+      const li = ev.currentTarget.closest(".item");
+      const item = duplicate(this.actor.getEmbeddedDocument("Item", li.dataset.itemId))
+
+      let amount = item.data.rank.value;
+
+      if (event.button == 0) {
+        if (amount < item.data.rank.max) {
+          item.data.rank.value = Number(amount) + 1;
+        }
+      } else if (event.button == 2) {
+        if (amount > 0) {
+          item.data.rank.value = Number(amount) - 1;
+        }
+      }
+
+      this.actor.updateEmbeddedDocuments('Item', [item]);
+    });
+
+    html.on('mousedown', '.char-pip-button', ev => {
+      const data = super.getData();
+
+      const div = $(ev.currentTarget);
+      const targetName = div.data("key");
+      const attribute = data.data.data[targetName];
+
+      let amount = attribute.value;
+      let max = div.data("max");
+      let min = div.data("min");
+
+      if (event.button == 0) {
+        if (amount < max) {
+          attribute.value = Number(amount) + 1;
+        }
+      } else if (event.button == 2) {
+        if (amount > min) {
+          attribute.value = Number(amount) - 1;
+        }
+      }
+
+
+      // superData.assets.html = '';
+      // for(let i = 0; i < 6; i ++){
+      //   if(i >= superData.assets.value)
+      //   superData.assets.html += '<div class="circle"></div>';
+      //   else
+      //   superData.assets.html += '<div class="circle-f"></div>';
+      // }
+  
+      // superData.threats.html = '';
+      // for(let i = 0; i < 6; i ++){
+      //   if(i >= superData.threats.value)
+      //   superData.threats.html += '<div class="diamond"></div>';
+      //   else
+      //   superData.threats.html += '<div class="diamond-f"></div>';
+      // }
+      // superData.xp.html = '';
+      // for(let i = 0; i < 8; i ++){
+      //   if(i >= superData.xp.value)
+      //   superData.xp.html += '<div class="circle"></div>';
+      //   else
+      //   superData.xp.html += '<div class="circle-f"></div>';
+      // }
+
+      const updateString = "data."+targetName;
+
+      this.actor.update({[updateString] : attribute.value});
+
+
+      // this.actor.update();
+      // this.actor.updateEmbeddedDocuments();
     });
 
 
@@ -250,7 +386,6 @@ export class EsoterraActorSheet extends ActorSheet {
       item.data.weapon.dmg1 = d2;
       item.data.weapon.dmg2 = d1;
       this.actor.updateEmbeddedDocuments('Item', [item]);
-
     });
 
 
@@ -272,47 +407,7 @@ export class EsoterraActorSheet extends ActorSheet {
         div.addEventListener("dragend", dragEnd, false);
 
       });
-
-
-      // Item Card handler
-
-      // html.find('div.dragItems').each((i, dragItem) => {
-
-      //   const item = duplicate(this.actor.getEmbeddedDocument("Item", dragItem.dataset.itemId))
-      //   // let dragItem = document.querySelector("#" + container.dataset.itemId);
-      //   var curIndex = 1; //The current zIndex
-
-      //   if (item.data.sheet == undefined) {
-      //     item.data.sheet = {
-      //       "active": false,
-      //       "currentX": 0,
-      //       "currentY": 0,
-      //       "initialX": 0,
-      //       "initialY": 0,
-      //       "xOffset": 0,
-      //       "yOffset": 0
-      //     };
-      //   }
-
-
-      //   setTranslate(item.data.sheet.currentX, item.data.sheet.currentY, dragItem, true);
-      //   dragItem.style.zIndex = item.data.sheet.currentX + 500;
-
-      //   //this.actor.updateEmbeddedDocuments('Item', [item]);
-
-      //   function setTranslate(xPos, yPos, el, round = false) {
-
-      //     if (round) {
-      //       let roundScale = 5;
-      //       xPos = Math.round(xPos / roundScale) * roundScale;// - (item.data.size.width - 1) * 4;
-      //       yPos = Math.round(yPos / roundScale) * roundScale;// - (item.data.size.height - 1) * 4;
-      //     }
-      //     el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
-      //   }
-      // });
     }
-
-
   }
 
   /* -------------------------------------------- */

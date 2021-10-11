@@ -1,8 +1,10 @@
+<script src="https://kit.fontawesome.com/bef7d2141f.js" crossorigin="anonymous"></script>
+
 <div class="esoterra" {{#if actor.id}}data-actor-id="{{actor.id}}" {{/if}}
     {{#if item.id}}data-item-id="{{item.id}}" {{/if}} {{#if tokenId}}data-token-id="{{tokenId}}" {{/if}}>
     <div class="showinfo"></div>
     <div class="showlessinfo"></div>
-
+    {{#unless useHTML}}
     <div class="rollcontainer">
         {{#if onlyDesc}}
         <div class="flexrow" style="height: 46px;">
@@ -53,6 +55,9 @@
         </div>
         <div class="rollmods">
             <div class="valuetext">{{stat.name}} ({{this.target}})</div>
+            {{#if useSkill}}
+            <div class="valuetext">{{skillName}} ({{skillBonus}})</div>
+            {{/if}}
         </div>
         {{/unless}}
             <!-- Damage Roll -->
@@ -75,3 +80,7 @@
 
         {{/if}}
     </div>
+    {{/unless}}
+    {{#if useHTML}}
+        {{{HTML}}}
+    {{/if}}

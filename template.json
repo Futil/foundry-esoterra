@@ -28,20 +28,30 @@
       "notes": "",
       "description": {
         "background": "Description",
-        "birthsign": "",
-        "coat": "",
-        "look": ""
+        "pronouns": ""
       },
       "level": {
         "value": 1,
         "xp": 0
       },
-      "pips": {
+      "wealth": {
         "value": 0
       },
       "grit": {
         "value": 0,
         "ignored": ""
+      },
+      "assets": {
+        "value": 1,
+        "html": ""
+      },
+      "threats": {
+        "value": 1,
+        "html": ""
+      },
+      "xp": {
+        "value": 0,
+        "html": ""
       },
       "stats": {
         "strength": {
@@ -52,6 +62,16 @@
         "dexterity": {
           "value": 0,
           "label": "Dexterity",
+          "max": 0
+        },
+        "intellect": {
+          "value": 0,
+          "label": "Intellect",
+          "max": 0
+        },
+        "charisma": {
+          "value": 0,
+          "label": "Charisma",
           "max": 0
         },
         "will": {
@@ -143,6 +163,8 @@
       "armor",
       "storage",
       "condition",
+      "talent",
+      "skill",
       "spell"
     ],
     "templates": {
@@ -164,7 +186,8 @@
         "pips": {
           "value": 0,
           "max": 0,
-          "html": ""
+          "html": "",
+          "level" : 0
         },
         "size": {
           "width": 1,
@@ -229,11 +252,37 @@
       "clear": "",
       "desc": ""
     },
+    "skill": {
+      "templates": [
+        "base"
+      ],
+      "core": "",
+      "focus": "",
+      "desc": ""
+    },
+    "talent": {
+      "templates": [
+        "base"
+      ],
+      "cost": 0,
+      "tag": "",
+      "descHTML" : "",
+      "descTalent" : "",
+      "placement": "hand",
+      "talent":true,
+      "rank": {
+        "value": 0,
+        "max": 0,
+        "html": ""
+      }
+    },
     "spell": {
       "templates": [
         "base"
       ],
       "tag": "",
+      "strainCost" : "1x[POW]",
+      "maxPower" : "3",
       "isSpell" : true
     }
   }

@@ -12,23 +12,52 @@
     "Eso.ActorLvl" : "LVL",
     "Eso.ActorGrit" : "Grit",
     "Eso.ActorXP" : "XP",
+
     "Eso.ActorStr" : "STR",
     "Eso.ActorDex" : "DEX",
     "Eso.ActorWil" : "WIL",
-    "Eso.ActorHP" : "HP",
+    "Eso.ActorInt" : "INT",
+    "Eso.ActorCha" : "CHA",
+
+    "Eso.ActorDodge" : "Dodge",
+    "Eso.ActorDefense" : "Defense",
+    "Eso.ActorAssets" : "Assets",
+    "Eso.ActorThreats" : "Threats",
+    "Eso.ActorSkills" : "Skills",
+
+    "Eso.ActorHP" : "HEALTH",
+    "Eso.ActorHits" : "HITS",
+    "Eso.ActorStrain" : "STRAIN",
+
     "Eso.ActorArmor" : "DEF",
 
     "Eso.Current" : "Current",
     "Eso.Strength" : "Strength",
     "Eso.Dexterity" : "Dexterity",
-
     "Eso.Will" : "Will",
+    "Eso.Charisma" : "Charisma",
+    "Eso.Intellect" : "Intellect",
+
     "Eso.Max" : "Max",
     "Eso.Pips" : "Pips",
+    "Eso.Wealth" : "Wealth",
+    "Eso.Debt" : "Debt",
     "Eso.Inventory" : "Inventory",
+    "Eso.InvBodyEquip" : "Body & Equipment",
+
+    "Eso.Risk" : "Risk",
+    "Eso.RollRisk" : "Risk Level",
+    "Eso.RiskAverage" : "Average Risk",
+    "Eso.RiskHigh" : "High Risk",
+    "Eso.RiskLow" : "Low Risk",
+
     "Eso.Notes" : "Notes",
     "Eso.Storage" : "Storage",
     "Eso.Options" : "Options",
+
+    "Eso.SkillAttribute" : "Attribute",
+    "Eso.SkillCore" : "Core",
+    "Eso.SkillFocus" : "Focus",
 
     "Eso.InventoryCarried" : "Carried: Ready to use",
     "Eso.InventoryWorn" : "Worn: Quick to ready",
@@ -36,8 +65,8 @@
     "Eso.InventoryGrit" : "Grit",
     "Eso.InventoryBank" : "Bank",
     "Eso.InventoryAddItem" : "Add Item",
-    "Eso.InventoryMainPaw" : "Main Paw",
-    "Eso.InventoryOffPaw" : "Off Paw",
+    "Eso.InventoryMainHand" : "Main Hand",
+    "Eso.InventoryOffHand" : "Off Hand",
     "Eso.InventoryBody" : "Body",
     "Eso.InventoryAttack1" : "Attack 1",
     "Eso.InventoryAttack2" : "Attack 2",
@@ -75,7 +104,12 @@
     "Eso.RollImpaired" : "Impaired",
     "Eso.RollPowerDesc" : "How much Power?",
     "Eso.RollSum" : "Sum",
+    "Eso.RollStrain" : "Strain",
     "Eso.RollDice" : "Dice",
+    "Eso.RollPower" : "Power",
+
+    "Eso.RollSkillDesc" : "Skill Roll",
+
     "Eso.RollUsage" : "Usage",
     "Eso.RollDamage" : "Damage",
     "Eso.RollTarget" : "Target",

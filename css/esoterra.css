@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Germania+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
 
 @include-when-export url(https://fonts.loli.net/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic-ext,cyrillic,latin-ext);
 
@@ -50,6 +52,15 @@
   /* font-family: "Montserrat", "Arial Black", sans-serif; */
 }
 
+.hide {
+  display: none;
+}
+
+.card-hover:hover .hide {
+  display: block;
+  transition: opacity 2s linear;
+}
+
 .esoterra ::-webkit-scrollbar-thumb {
   outline: none;
   border-radius: 3px;
@@ -78,7 +89,8 @@
 .list-roll:focus,
 .rollable:hover, .rollable:focus {
   color: #000;
-  text-shadow: 0 0 10px rgb(112, 112, 112);
+  text-shadow: 0 0 20px rgb(180, 180, 180);
+  /* box-shadow: 5px 10px; */
   cursor: pointer;
 }
 
@@ -195,6 +207,13 @@
   justify-content: space-between;
 }
 
+.flex {
+  display: flex;
+  justify-content:space-evenly;
+  align-items: center;
+  flex: auto;
+}
+
 /* Styles limited to esoterra sheets */
 .esoterra .item-form {
   font-family: "Roboto", sans-serif;
@@ -238,18 +257,18 @@
 .esoterra .char-header .header-grid {
   display: grid;
   grid-template-areas:
-  'header header header'
-  'portrait centercol abilities ';
+  'header header portrait'
+  'abilities centercol portrait ';
   grid-gap: 10px;
   padding: 10px;
-  grid-template-columns: 15em auto 14em;
+  grid-template-columns: 13em 26em 10em;
 }
 
 .esoterra .header-grid-creature {
   display: grid;
   grid-template-areas:
   'header header header'
-  'centercol centercol abilities ';
+  'abilities centercol centercol ';
   grid-gap: 10px;
   padding: 10px;
   grid-template-columns: 15em auto 14em;
@@ -414,8 +433,7 @@
 
 .esoterra .tab-select {
   font-size: medium;
-  font-weight: bold;
-  font-family: 'Germania One', Garamond;
+  font-family: 'Bebas Neue', Garamond;
   font-size: 1.5em;
   color: #111;
   text-align: center;
@@ -477,7 +495,7 @@
 }
 
 .esoterra .darkGreyText{
-  color: rgb(56, 56, 56);
+  color: rgb(22, 22, 22);
 }
 
 .esoterra .sizelarge{
@@ -490,7 +508,7 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
-  height: 40px;
+  height: 30px;
   width: 100%
 }
 
@@ -499,9 +517,8 @@
   border: 0px solid rgb(77, 77, 77);
   color: rgb(77, 77, 77);
   font-size: 0.9rem;
-  font-weight: bold;
   text-align: center;
-  font-family: 'Germania One', Garamond;
+  font-family: 'Bebas Neue', Garamond;
   background: transparent;
   flex: 1;
 }
@@ -513,8 +530,14 @@
 
 .esoterra .blockborder{
   border: 2px solid #111;
-  border-radius: 0.7em;
-  background: linear-gradient(90deg, rgba(221,221,221,1) 0%, rgba(221,221,221,1) 34%,rgba(255,255,255,1) 20%, rgba(255,255,255,1) 100%);
+  /* border-radius: 0 0.7em 0; */
+  background: linear-gradient(90deg , rgba(22,22,22,1) 0%, rgba(22,22,22,1) 37%,rgba(255,255,255,1) 20%, rgba(255,255,255,1) 100%);
+}
+
+.esoterra .blockbordermiddle{
+  border: 2px solid #111;
+  border-radius: 0.7em ;
+  /* background: linear-gradient(90deg , rgba(22,22,22,1) 0%, rgba(22,22,22,1) 34%,rgba(255,255,255,1) 20%, rgba(255,255,255,1) 100%); */
 }
 
 .esoterra .blockborder-mini{
@@ -529,15 +552,97 @@
 }
 
 .esoterra .abilities{
-  width: 14em;
+  width: auto;
 }
 
-.esoterra .minmaxtopstat{
-  width: 8.5rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.esoterra .abilityTop{
+  display: flex;
   justify-items: center;
-  gap: 3px;
+  margin-top: 2.5px;
+}
+
+.esoterra .skillHeaderText{
+  font-family: 'Bebas Neue', Garamond;
+  font-size: 1.3rem;
+  font-weight: normal;
+  text-align: center;
+  text-transform: uppercase;
+  color: white;
+}
+
+.esoterra .abilityText{
+  font-family: 'Bebas Neue', Garamond;
+  font-size: 1.7rem;
+  font-weight: normal;
+  text-align: center;
+  text-transform: uppercase;
+  color: white;
+}
+
+.esoterra .abilityTextBackground{
+  background-color: rgba(22,22,22,1);
+  border-radius: 0 20px 20px 0;
+  margin-right: 4px;
+  height: 35px;
+  padding: 1px;
+  width: 60px;
+  text-align: center;
+  position: relative;
+}
+
+.esoterra .riskTextBackground{
+  background-color: rgba(22,22,22,1);
+  border-radius: 20px;
+  height: 32px;
+  padding: 0px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.esoterra .skillframe{
+  margin-top: 10px;
+  grid-column: -1/2;
+  align-items: start;
+  width: 100%;
+  height: auto;
+  border: 2px solid #111;
+  border-radius: 0.5em;
+  background: linear-gradient(
+    180deg
+    , rgba(22,22,22,1) 0%, rgba(22,22,22,1) 19%,rgba(255,255,255,1) 20%, rgba(255,255,255,1) 100%);
+  padding: 1px;
+}
+
+.esoterra .skillheader{
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.esoterra .skillslot{
+  width: 100%;
+  height: auto;
+}
+
+.esoterra .skillitem{
+  background: rgb(230,230,230);
+  padding: 0px;
+  margin: 2px;
+  font-family: 'Bebas Neue';
+  font-size: 20px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.esoterra .skillsborder{
+  border: 2px solid rgb(56, 56, 56);
+}
+
+
+.esoterra .minmaxtopstat{
+  /* width: 120px; */
+  display: grid;
+  /* grid-template-columns: 1fr 1fr; */
+  justify-items: center;
 }
 
 .esoterra .minmaxwrapper{
@@ -545,12 +650,45 @@
     display: grid;
     grid-template-columns: 1fr 1px 1fr;
     align-items: start;
-    width: 145px;
-    height: 50px;
+    width: 120px;
+    height: 43px;
     padding: 0;
     border: 2px solid #111;
-    border-radius: 0.7em;
+    border-radius: 2em;
     background: 0;
+}
+
+.esoterra .assetwrapper{
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 25px;
+  padding: 7px;
+  border-radius: 2em;
+  background:rgb(200, 200, 200);
+}
+
+.esoterra .dodgewrapper{
+  display: flex;
+  align-items: center;
+  width: 35px;
+  height: 35px;
+  padding: 0;
+  margin: auto;
+  border: 2px solid #111;
+  background: 0;
+  transform: rotateZ(45deg);
+}
+
+.esoterra .defensewrapper{
+  display: flex;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  margin: auto;
+  border: 2px solid #111;
+  background: 0;
 }
 
 .esoterra .minmax-wrapper-noborder{
@@ -568,7 +706,7 @@
 .esoterra .minmax-input {
   margin: auto;
   border: 0px solid #111;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: bold;
   text-align: center;
   font-family: 'Germania One', Garamond;
@@ -578,22 +716,50 @@
 
 
 .esoterra .minmaxtext{
-  font-family: 'Germania One', Garamond;
-  font-size: 1.8rem;
-  font-weight: bold;
+  font-family: 'Bebas Neue', Garamond;
+  font-size: 1.3rem;
+  font-weight: normal;
   text-align: center;
   text-transform: uppercase;
   margin: auto;
   flex: 1;
+  /* color: white; */
+}
+
+.esoterra .dodgetext{
+  font-family: 'Bebas Neue', Garamond;
+  font-size: 1.1rem;
+  font-weight: normal;
+  text-align: center;
+  text-transform: uppercase;
+  background-color: rgba(22,22,22,1);
+  color: white;
+  padding-inline: 4px;
+  border-radius: 4px;
+}
+
+
+
+.esoterra .defensetext{
+  font-family: 'Bebas Neue', Garamond;
+  font-size: 1.4rem;
+  font-weight: normal;
+  text-align: center;
+  text-transform: uppercase;
+  flex: 1;
+  background-color: rgba(22,22,22,1);
+  color: white;
+  padding-inline: 10px;
+  transform: skewX(-15deg);
 }
 
 .esoterra .littleLabel{
-  font-family: 'Germania One', Garamond;
+  font-family: 'Bebas Neue', Garamond;
   font-size: 1.3rem;
-  font-weight: bold;
   text-align: center;
   margin: auto;
-  flex: 0.5;
+  flex: 0.6;
+  color: white;
 }
 
 .esoterra .bigLabel{
@@ -906,8 +1072,8 @@
 .esoterra .header-border {
   display: grid;
   padding: 0.3em;
-  margin: 5px;
-  border: 2px solid black;
+  /* margin: 5px; */
+  /* border: 2px solid black; */
   border-radius: 10px;
   background:rgb(22, 22, 22);
   /* background: linear-gradient(90deg, rgba(221,221,221,1) 0%, rgba(221,221,221,1) 34%,rgba(255,255,255,1) 20%, rgba(255,255,255,1) 100%); */
@@ -930,6 +1096,70 @@
   color: rgb(22, 22, 22);
   background: white;
   border-radius: 10px;
+  margin: 0.5px;
+  font-size: 12.5px;
+}
+
+.esoterra .fa-circle-faded{
+  color: rgba(22, 22, 22, 0.4);
+  background: white;
+  border-radius: 10px;
+}
+
+.esoterra .fa-diamond{
+  font-size: 14px;
+  margin: 1px;
+}
+
+.esoterra .circle{
+  color: rgb(22, 22, 22);
+  background: white;
+  border-radius: 10px;
+  border: 2px solid black;
+  width: 15px;
+  height: 15px;
+}
+
+.esoterra .circle-f{ /*Filled circle*/
+  color: rgb(22, 22, 22);
+  background: rgb(22, 22, 22);
+  border-radius: 10px;
+  border: 2px solid black;
+  width: 15px;
+  height: 15px;
+}
+
+.esoterra .diamond{
+  color: rgb(22, 22, 22);
+  background: white;
+  border: 2px solid black;
+  width: 12px;
+  height: 12px;
+  transform: rotateZ(45deg);
+}
+
+.esoterra .diamond-f{
+  color: rgb(22, 22, 22);
+  background: rgb(22, 22, 22);
+  border: 2px solid black;
+  width: 12px;
+  height: 12px;
+  transform: rotateZ(45deg);
+}
+
+.esoterra .margin1px{
+  margin: 1px;
+}
+
+.esoterra .fa-square{
+  color: rgb(22, 22, 22);
+  background: white;
+}
+
+.esoterra .rightcol {
+  height: auto;
+  /* border: 2px solid black; */
+  /* border-radius: 0 0 0 10px; */
 }
 
 .esoterra .portrait {
@@ -953,7 +1183,7 @@
 
   border: 2px solid #111;
   border-radius: 0em 0em 0.25em 0.25em;
-  font-family: 'Germania One', Garamond;
+  font-family: 'Righteous', Garamond;
   position: relative;
 }
 
@@ -961,11 +1191,13 @@
   width: 107%;
   margin-top: 0;
   margin-left: -9px;
-  font-size: 1.9rem;
+  font-size: 1.8rem;
   border-bottom: 2px solid rgb(22, 22, 22);
   background: rgba(221,221,221,1);
   padding: 5px;
   text-transform: capitalize;
+  font-weight: bold;
+  
 }
 
 .esoterra .rollweaponh1 {
@@ -973,7 +1205,7 @@
   margin-top: 0;
   margin-left: -9px;
   margin-right: -9px;
-  font-size: 2rem;
+  font-size: 1.6rem;
   background: rgb(22, 22, 22);
   /* border-bottom-right-radius: 1.5em; */
   color: white;
@@ -984,7 +1216,7 @@
 }
 
 .esoterra .rollh2 {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: normal;
   line-height: 1;
   text-align: center;
@@ -1008,10 +1240,35 @@
   width: 100%;
   padding: 0.5rem;
   color: black;
-  font-family: 'Germania One', Garamond;
+  font-family: 'Righteous', Garamond;
   font-size: 0.9rem;
   text-align: center;
 }
+
+.esoterra .rollriskheader {
+  height: 46px;
+  margin-top: 0;
+  margin-left: -9px;
+  margin-right: -9px;
+  font-size: 1.5rem;
+  background: rgb(22, 22, 22);
+  /* border-bottom-right-radius: 1.5em; */
+  color: white;
+  padding: 5px;
+  flex: auto;
+  width: 100%;
+  text-align: center;
+}
+
+.esoterra .rollrisk {
+  width: 100%;
+  padding: 0.5rem;
+  color: black;
+  font-family: 'Righteous', Garamond;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
 
 .esoterra .roll-grid {
   box-sizing: border-box;
@@ -1042,7 +1299,6 @@
   border-radius: 1.5rem;
   color: #111;
 
-  font-family: 'Germania One', Garamond;
   text-align: right;
 }
 
@@ -1063,7 +1319,6 @@
   padding: 5px;
   color: rgb(117, 0, 0);
   font-weight: normal;
-  font-family: 'Germania One', Garamond;
 }
 
 .esoterra .roll-damagebox {
@@ -1083,9 +1338,9 @@
 
 .esoterra .item-container {
   width: 720px;
-  height: 470px;
+  height: 700px;
   margin: auto;
-  background-color: rgba(230,230,230,1);
+  background-color: rgba(250,250,250,1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1104,10 +1359,12 @@
   position: absolute;
   border: 2px solid grey;
   border-radius: 0.1em;
-  height: 18.4em;
-  width: 27.7em;
+  height: 258px;
+  width: 386px;
   pointer-events: none;
   color: rgb(22, 22, 22);
+  background-color: rgba(240,240,240,1);
+
 }
 
 .esoterra .item-bag-text {
@@ -1127,15 +1384,15 @@
   position: absolute;
   border: 2px dashed grey;
   border-radius: 0.1em;
-  height: 9.1em;
-  width: 9.1em;
+  height: 130px;
+  width: 130px;
   pointer-events: none;
 }
 
 .esoterra .item-slot-header {
   padding: 4px;
   height: 30px;
-  font-family: 'Germania One', Garamond;
+  font-family: 'Bebas Neue', Garamond;
   font-size: 1.3em;
   color: grey;
   text-align: center;
@@ -1161,6 +1418,7 @@
   right: 27px;
 }
 
+
 .esoterra .item-card {
   z-index: 9;
   background-color: white;
@@ -1183,15 +1441,42 @@
   display: flex;
   justify-content: left;
   padding: 4px;
-  height: 30px;
+  height: 26px;
   z-index: 10;
   border-bottom: 1px solid rgb(22, 22, 22);
   border-radius: 0.1em 0.1em 0 0;
   font-family: 'Germania One', Garamond;
-  font-size: 1.25em;
+  font-size: 1.15em;
   color: black;
   pointer-events: none;
   white-space: nowrap;
+  background: white;
+}
+
+.esoterra .item-card-footer {
+  display: flex;
+  justify-content: left;
+  padding: 2px;
+  height: 23px;
+  width: 100%;
+  z-index: 0;
+  border-top: 2px dashed rgb(22, 22, 22);
+  font-family: 'Germania One', Garamond;
+  font-size: 1.15em;
+  color: black;
+  pointer-events: none;
+  white-space: nowrap;
+  background: rgba(255,255,255,0.5);
+  bottom: 0px;
+  position: absolute;
+}
+
+.esoterra .item-card-footer-right {
+  position: absolute;
+  right: 3px;
+  font-size: 14px;
+  font-family: 'Germania One';
+  bottom: 2px;
 }
 
 .esoterra .item-card-header-noborder {
@@ -1206,19 +1491,42 @@
 }
 
 .esoterra .item-card-star {
-  font-size: 27px;
-  position: relative;
-  top: -10px;
+  font-size: 20px;
+  position: absolute;
+  right: 2px;
+}
+
+.esoterra .item-card-pip-column {
+  position: absolute;
+  top: 24px;
+  right: 7px;
+  display: flex;
+  flex-direction: column;
+}
+
+.esoterra .item-card-rank-bar {
+  position: absolute;
+  bottom: -4px;
+  left: -1px;
+  display: flex;
+  flex-direction: row;
 }
 
 .esoterra .item-card-chat {
-  font-size: 0.7em;
-  color: grey;
+  font-size: .9em;
+  color: black;
   text-align: right;
   pointer-events: auto;
-  bottom: 3px;
-  right: 4px;
+  bottom: 25px;
+  left: 4px;
   position: absolute;
+  background: white;
+  padding: 2px;
+}
+
+.esoterra .item-card-xp {
+  position: absolute;
+  right: 2px;
 }
 
 .esoterra .item-card-title {
@@ -1228,15 +1536,16 @@
 .esoterra .item-card-tag {
   text-align: left;
   color: rgb(22, 22, 22);
-  margin: 5px;
+  margin: 2px;
   font-weight: bold;
-  bottom: 0;
+  /* bottom: 0; */
   position: absolute;
   pointer-events: none;
   background: white;
+  font-size: .8em;
 }
 
-.esoterra .item-card-desc {
+.esoterra .item-card-condition-desc {
   text-align: left;
   color: rgb(22, 22, 22);
   margin: 5px;
@@ -1248,6 +1557,26 @@
   pointer-events: none;
   font-family: "Roboto", sans-serif;
 }
+
+.esoterra .item-card-talent-desc {
+  text-align: left;
+  color: rgb(22, 22, 22);
+  margin: 5px;
+  font-weight: normal;
+  font-size: 0.9em;
+  line-height: 14px;
+  width: 85%;
+  top: 23px;
+  left: 0px;
+  position: absolute;
+  pointer-events: none;
+  font-family: "Roboto Condensed", sans-serif;
+  overflow-wrap: break-word;
+  display: inline-block;
+  word-break: break-word;
+  hyphens: auto;
+}
+
 .esoterra .item-card-clear {
   text-align: left;
   color: rgb(22, 22, 22);
@@ -1272,27 +1601,28 @@
 
 .esoterra .item-card-damage {
   text-align: center;
-  border: 1px solid rgb(22, 22, 22);
+  border: 2px solid rgb(22, 22, 22);
   background: white;
   color: rgb(22, 22, 22);
-  margin: 5px;
+  /* margin: 4px; */
   font-family: 'Germania One', Garamond;
-  font-size: 1.5em;
-  right: 0;
-  top: 28px;
+  font-size: 1.2em;
+  right: -1px;
+  bottom: -2px;
   position: absolute;
-  padding: 5px;
+  padding: 3px;
 }
+
 
 .esoterra .item-card-image {
   border: 0;
-  width: 79%;
-  height: 79%;
+  width: 70%;
+  height: 70%;
   pointer-events: none;
   position: absolute;
   z-index: -1;
-  bottom: 0;
-  left: 10%;
+  top: 17%;
+  left: 13%;
   object-fit: scale-down;
 }
 
@@ -1324,6 +1654,10 @@
 }
 
 .esoterra .pip-button {
+  pointer-events: auto;
+}
+
+.esoterra .rank-button {
   pointer-events: auto;
 }
 

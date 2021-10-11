@@ -5,10 +5,7 @@
             <h1 class="charname"><input name="name" type="text" value="{{name}}" placeholder="Name" class="item-text item-sheet-header"/></h1>
 
             <div class="grid grid-3col">
-                <div class="resource">
-                    <label class="resource-label">{{localize "Eso.ItemWorth"}}</label>
-                    <input type="text" name="data.cost" value="{{data.cost}}" data-dtype="Number" class="item-text"/>
-                </div>
+
                 <div class="resource">
                     <label class="resource-label">{{localize "Eso.ItemCurrentUsage"}}</label>
                     <input type="text" name="data.pips.value" value="{{data.pips.value}}" data-dtype="Number" class="item-text"/>
@@ -16,6 +13,22 @@
                 <div class="resource">
                     <label class="resource-label">{{localize "Eso.ItemMaxUsage"}}</label>
                     <input type="text" name="data.pips.max" value="{{data.pips.max}}" data-dtype="Number" class="item-text"/>
+                </div>
+                <div class="resource">
+                    <label class="resource-label">Usage Level</label>
+                    <input type="text" name="data.pips.level" value="{{data.pips.level}}" data-dtype="Number" class="item-text"/>
+                </div>
+                <div class="resource">
+                    <label class="resource-label">Current Rank</label>
+                    <input type="text" name="data.rank.value" value="{{data.rank.value}}" data-dtype="Number" class="item-text"/>
+                </div>
+                <div class="resource">
+                    <label class="resource-label">Max Rank</label>
+                    <input type="text" name="data.rank.max" value="{{data.rank.max}}" data-dtype="Number" class="item-text"/>
+                </div>
+                <div class="resource">
+                    <label class="resource-label">{{localize "Eso.ItemWorth"}}</label>
+                    <input type="text" name="data.cost" value="{{data.cost}}" data-dtype="Number" class="item-text"/>
                 </div>
                 <div class="resource">
                     <label class="resource-label">{{localize "Eso.ItemTag"}}</label>
@@ -30,13 +43,10 @@
                     <input type="text" name="data.size.height" value="{{data.size.height}}" data-dtype="Number" class="item-text"/>
                 </div>
                 <div class="resource">
-                    <label class="resource-label">Strain Cost</label>
-                    <input type="text" name="data.strainCost" value="{{data.strainCost}}" data-dtype="String" class="item-text"/>
+                    <label class="resource-label" >Card Desc</label>
+                    <textarea type="text" name="data.descTalent" value="{{data.descTalent}}" data-dtype="String" class="item-text" style="width: 140px; height: 130px;">{{data.descTalent}}</textarea>
                 </div>
-                <div class="resource">
-                    <label class="resource-label">Max Power</label>
-                    <input type="text" name="data.maxPower" value="{{data.maxPower}}" data-dtype="Number" class="item-text"/>
-                </div>
+
             </div>
 
         </div>
