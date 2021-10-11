@@ -51,25 +51,18 @@
       "entity": "Item"
     },
     {
-      "name": "creatures",
-      "label": "Creatures",
+      "name": "talents",
+      "label": "Talents",
       "system": "esoterra",
-      "path": "packs/creatures.db",
-      "entity": "Actor"
+      "path": "packs/talents.db",
+      "entity": "Item"
     },
     {
-      "name": "tables",
-      "label": "Tables",
+      "name": "skills",
+      "label": "Skills",
       "system": "esoterra",
-      "path": "packs/tables.db",
-      "entity": "RollTable"
-    },
-    {
-      "name": "esoterra-macros",
-      "label": "Esoterra Macros",
-      "system": "esoterra",
-      "path": "packs/esoterra-macros.db",
-      "entity": "Macro"
+      "path": "packs/skills.db",
+      "entity": "Item"
     }
   ],
   "languages": [
@@ -77,21 +70,6 @@
       "lang": "en",
       "name": "English",
       "path": "lang/en.json"
-    },
-    {
-      "lang": "fr",
-      "name": "Français",
-      "path": "lang/fr.json"
-    },
-    {
-      "lang": "pt-BR",
-      "name": "Português (Brasil)",
-      "path": "lang/pt-BR.json"
-    },
-    {
-      "lang": "es",
-      "name": "Español (Spanish)",
-      "path": "lang/es.json"
     }
   ],
   "gridDistance": 1,
