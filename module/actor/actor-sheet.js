@@ -25,8 +25,40 @@ export class EsoterraActorSheet extends ActorSheet {
 
     const superData = data.data.data;
 
-    // Prepare items.
     if (this.actor.data.type == 'character') {
+
+      // Initialization run.
+      // if(!superData.initialized){
+      //   console.log("Initializing Character Sheet");
+      if(superData.assets.html == ''){
+        for(let i = 0; i < 6; i ++){
+          if(i >= superData.assets.value)
+          superData.assets.html += '<div class="circle"></div>';
+          else
+          superData.assets.html += '<div class="circle-f"></div>';
+        }
+      }
+    
+      if(superData.threats.html == ''){
+        for(let i = 0; i < 6; i ++){
+          if(i >= superData.threats.value)
+          superData.threats.html += '<div class="diamond"></div>';
+          else
+          superData.threats.html += '<div class="diamond-f"></div>';
+        }
+      }
+      if(superData.xp.html == ''){
+        for(let i = 0; i < 8; i ++){
+          if(i >= superData.xp.value)
+          superData.xp.html += '<div class="circle"></div>';
+          else
+          superData.xp.html += '<div class="circle-f"></div>';
+        }
+      }
+      //   superData.initialized = true;
+
+      //   this.actor.update({[superData] : superData});
+      // }
       this._prepareCharacterItems(data);
     }
 
@@ -137,10 +169,8 @@ export class EsoterraActorSheet extends ActorSheet {
               item.rank.html += '<i class="far fa-diamond"></i>';
             }
           }
-
         }
 
-        
         if(item.sheet.rotation == undefined)
         item.sheet.rotation = 0;
 
@@ -158,7 +188,6 @@ export class EsoterraActorSheet extends ActorSheet {
         item.sheet.currentX = xPos;
         item.sheet.currentY = yPos;
         item.sheet.zIndex = xPos + yPos + 1000;
-        
 
         gear.push(i);
       }
@@ -342,6 +371,37 @@ export class EsoterraActorSheet extends ActorSheet {
         }
       }
 
+      let updated = {
+        html: '',
+        value: attribute.value
+      }
+
+      if(targetName == 'threats'){
+        updated.html = '';
+        for(let i = 0; i < 6; i ++){
+          if(i >= updated.value)
+          updated.html += '<div class="diamond"></div>';
+          else
+          updated.html += '<div class="diamond-f"></div>';
+        }
+      } else if (targetName == 'assets') {
+        updated.html = '';
+        for(let i = 0; i < 6; i ++){
+          if(i >= updated.value)
+          updated.html += '<div class="circle"></div>';
+          else
+          updated.html += '<div class="circle-f"></div>';
+        }
+      } else if (targetName == 'xp') {
+        updated.html = '';
+        for(let i = 0; i < 8; i ++){
+          if(i >= updated.value)
+          updated.html += '<div class="circle"></div>';
+          else
+          updated.html += '<div class="circle-f"></div>';
+        }
+      }
+
 
       // superData.assets.html = '';
       // for(let i = 0; i < 6; i ++){
@@ -368,7 +428,7 @@ export class EsoterraActorSheet extends ActorSheet {
 
       const updateString = "data."+targetName;
 
-      this.actor.update({[updateString] : attribute.value});
+      this.actor.update({[updateString] : updated});
 
 
       // this.actor.update();
