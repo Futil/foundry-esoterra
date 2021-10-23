@@ -193,9 +193,9 @@ export class EsoterraActor extends Actor {
         content: "<h2> "+game.i18n.localize('Eso.SkillAttribute')+" </h2> <select style='margin-bottom:10px;'name='attribute' id='attribute'>\
         <option value='strength'>"+game.i18n.localize('Eso.Strength')+"</option>\
         <option value='dexterity'>"+game.i18n.localize('Eso.Dexterity')+"</option>\
-        <option value='intellect'>"+game.i18n.localize('Eso.Will')+"</option>\
+        <option value='intellect'>"+game.i18n.localize('Eso.Intellect')+"</option>\
         <option value='charisma'>"+game.i18n.localize('Eso.Charisma')+"</option>\
-        <option value='will'>"+game.i18n.localize('Eso.Intellect')+"</option>\
+        <option value='will'>"+game.i18n.localize('Eso.Will')+"</option>\
         </select> <br/>",
         buttons: {
           roll: {
