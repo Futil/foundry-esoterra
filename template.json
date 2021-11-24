@@ -2,8 +2,9 @@
   "Actor": {
     "types": [
       "character",
-      "hireling",
       "creature",
+      "mook",
+      "vehicle",
       "storage"
     ],
     "templates": {
@@ -87,33 +88,6 @@
         }
       }
     },
-    "hireling": {
-      "templates": [
-        "base"
-      ],
-      "biography": "",
-      "notes": "",
-      "description": {
-        "disposition": ""
-      },
-      "stats": {
-        "strength": {
-          "value": 0,
-          "label": "Strength",
-          "max": 0
-        },
-        "dexterity": {
-          "value": 0,
-          "label": "Dexterity",
-          "max": 0
-        },
-        "will": {
-          "value": 0,
-          "label": "Will",
-          "max": 0
-        }
-      }
-    },
     "creature": {
       "templates": [
         "base"
@@ -123,6 +97,18 @@
       "description": {
         "disposition": ""
       },
+      "assets": {
+        "value": 1,
+        "html": ""
+      },
+      "threats": {
+        "value": 1,
+        "html": ""
+      },
+      "xp": {
+        "value": 0,
+        "html": ""
+      },
       "stats": {
         "strength": {
           "value": 0,
@@ -132,6 +118,55 @@
         "dexterity": {
           "value": 0,
           "label": "Dexterity",
+          "max": 0
+        },
+        "intellect": {
+          "value": 0,
+          "label": "Intellect",
+          "max": 0
+        },
+        "charisma": {
+          "value": 0,
+          "label": "Charisma",
+          "max": 0
+        },
+        "will": {
+          "value": 0,
+          "label": "Will",
+          "max": 0
+        }
+      }
+    },
+    "mook": {
+      "templates": [
+        "base"
+      ],
+      "biography": "",
+      "notes": "",
+      "description": {
+        "disposition": ""
+      },
+      "assets": {
+        "value": 1,
+        "html": ""
+      },
+      "threats": {
+        "value": 1,
+        "html": ""
+      },
+      "xp": {
+        "value": 0,
+        "html": ""
+      },
+      "stats": {
+        "combat": {
+          "value": 0,
+          "label": "Combat",
+          "max": 0
+        },
+        "wit": {
+          "value": 0,
+          "label": "Wit",
           "max": 0
         },
         "will": {
@@ -152,6 +187,33 @@
       },
       "size" : {
         "width" : 3,
+        "height" : 2
+      },
+      "storeDiv":""
+    },
+    "vehicle": {
+      "templates": [
+        "base"
+      ],
+      "biography": "",
+      "notes": "",
+      "description": {
+        "disposition": ""
+      },
+      "stats": {
+        "strength": {
+          "value": 0,
+          "label": "Strength",
+          "max": 0
+        },
+        "dexterity": {
+          "value": 0,
+          "label": "Dexterity",
+          "max": 0
+        }
+      },
+      "size" : {
+        "width" : 4,
         "height" : 2
       },
       "storeDiv":""

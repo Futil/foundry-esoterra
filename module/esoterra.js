@@ -1,9 +1,10 @@
 // Import Modules
 import { EsoterraActor } from "./actor/actor.js";
 import { EsoterraActorSheet } from "./actor/actor-sheet.js";
-import { EsoterraHirelingSheet } from "./actor/hireling-sheet.js";
 import { EsoterraCreatureSheet } from "./actor/creature-sheet.js";
+import { EsoterraMookSheet } from "./actor/mook-sheet.js";
 import { EsoterraStorageSheet } from "./actor/storage-sheet.js";
+import { EsoterraVehicleSheet } from "./actor/vehicle-sheet.js";
 
 import { EsoterraItem } from "./item/item.js";
 import { EsoterraItemSheet } from "./item/item-sheet.js";
@@ -45,16 +46,20 @@ Hooks.once('init', async function () {
     types: ['character'],
     makeDefault: true
   });
-  Actors.registerSheet("esoterra", EsoterraHirelingSheet, {
-    types: ['hireling'],
-    makeDefault: false
-  });
   Actors.registerSheet("esoterra", EsoterraCreatureSheet, {
     types: ['creature'],
     makeDefault: false
   });
+  Actors.registerSheet("esoterra", EsoterraMookSheet, {
+    types: ['mook'],
+    makeDefault: false
+  });
   Actors.registerSheet("esoterra", EsoterraStorageSheet, {
     types: ['storage'],
+    makeDefault: false
+  });
+  Actors.registerSheet("esoterra", EsoterraVehicleSheet, {
+    types: ['vehicle'],
     makeDefault: false
   });
 

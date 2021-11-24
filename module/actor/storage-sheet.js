@@ -59,91 +59,133 @@ export class EsoterraStorageSheet extends ActorSheet {
         return data.data;
     }
 
-    /**
-     * Organize and classify Items for Character sheets.
-     *
-     * @param {Object} actorData The actor to prepare.
-     *
-     * @return {undefined}
-     */
-    _prepareCharacterItems(sheetData) {
+  /**
+   * Organize and classify Items for Character sheets.
+   *
+   * @param {Object} actorData The actor to prepare.
+   *
+   * @return {undefined}
+   */
+   _prepareCharacterItems(sheetData) {
 
-        const actorData = sheetData.actor.data;
+    const actorData = sheetData.data;
 
-        // Initialize containers.
-        const gear = [];
+    // Initialize containers.
+    const gear = [];
+    const skills = [];
 
-        // Iterate through items, allocating to containers
-        // let totalWeight = 0;
-        for (let i of sheetData.items) {
-            let item = i.data;
-            i.img = i.img || DEFAULT_TOKEN;
+    // Iterate through items, allocating to containers
+    // let totalWeight = 0;
+    for (let i of sheetData.items) {
+      let item = i.data;
+      i.img = i.img || DEFAULT_TOKEN;
 
-            // We'll handle the pip html here.
-            if (item.pips == null) {
-                item.pips = {
-                    "value": 0,
-                    "max": 0,
-                    "html": ""
-                };
+      if(i.type === "skill"){
+        skills.push(i);
+      } else {
+        // We'll handle the pip html here.
+        if (item.pips == null) {
+          item.pips = {
+            "value": 0,
+            "max": 0,
+            "html": ""
+          };
+        }
+        let pipHtml = "";
+        for (let i = 0; i < item.pips.max; i++) {
+          if (i < item.pips.value){
+            pipHtml += '<i class="fas fa-circle"></i>';
+          }
+          else{
+            if(item.pips.level == 0 || i < item.pips.level){
+              pipHtml += '<i class="far fa-circle"></i>';
+            } else {
+              pipHtml += '<i class="far fa-circle" style="color: rgba(55,55,55,0.5)"></i>';
             }
-            let pipHtml = "";
-            for (let i = 0; i < item.pips.max; i++) {
-                if (i < item.pips.value)
-                    pipHtml += '<i class="fas fa-circle"></i>'
-                else
-                    pipHtml += '<i class="far fa-circle"></i>';
-            }
-            item.pips.html = pipHtml;
-            // End of the pip handler
+          }
+        }
+        item.pips.html = pipHtml;
+        // End of the pip handler
 
-            // Now we'll set tags
-            if (i.type == "item") { item.isWeapon = false; item.isCondition = false; }
-            else if (i.type == "weapon") {
-                item.isWeapon = true;
-                item.isCondition = false;
+        // Now we'll set tags
+        if (i.type == "item") { item.isWeapon = false; item.isCondition = false; }
+        else if (i.type == "weapon") {
+          item.isWeapon = true;
+          item.isCondition = false;
 
-                if (item.weapon.dmg2 != "") {
-                    item.weapon.canSwap = true;
-                } else {
-                    item.weapon.canSwap = false;
-                }
-            }
-
-            if (item.size == undefined) {
-                item.size = {
-                    "width": 1,
-                    "height": 1,
-                    "x": "9em",
-                    "y": "9em"
-                }
-            }
-            if (item.sheet.rotation == undefined)
-                item.sheet.rotation = 0;
-
-            item.size.aspect = (item.sheet.rotation == -90 ? (item.size.width > item.size.height ? item.size.width / item.size.height : item.size.height / item.size.width) : 1);
-
-            item.sheet.curHeight = (item.sheet.rotation == -90 ? item.size.width : item.size.height);
-            item.sheet.curWidth = (item.sheet.rotation == -90 ? item.size.height : item.size.width);
-
-            item.size.x = (item.sheet.curWidth * 8 + item.sheet.curWidth) + "em";
-            item.size.y = (item.sheet.curHeight * 8 + item.sheet.curHeight) + "em";
-
-            let roundScale = 5;
-            let xPos = Math.round(item.sheet.currentX / roundScale) * roundScale;
-            let yPos = Math.round(item.sheet.currentY / roundScale) * roundScale;
-            item.sheet.currentX = xPos;
-            item.sheet.currentY = yPos;
-            item.sheet.zIndex = xPos + yPos + 1000;
-
-            gear.push(i);
+          if (item.weapon.dmg2 != "") {
+            item.weapon.canSwap = true;
+          } else {
+            item.weapon.canSwap = false;
+          }
         }
 
-        // Assign and return
-        sheetData.actor.gear = gear;
+        if (item.size == undefined) {
+          item.size = {
+            "width": 1,
+            "height": 1,
+            "x": "9em",
+            "y": "9em"
+          }
+        }
+        
+        //Spell stuff / Setting the footer text
+        if (i.type == "spell"){
+          let strainHTML = '';
+          if(item.strainCost != undefined){
+            strainHTML = item.strainCost.split("[POW]").join('<i class="fas fa-burn"></i>');
+          }
+          let maxHTML = '';
+          if(item.maxPower > 0) maxHTML = ' : MAX ' +item.maxPower+ '<i class="fas fa-burn"></i>';
+          item.footerHTML= strainHTML + maxHTML;
+        } else if(i.type == "talent"){
+          if(item.descTalent != undefined){
+            item.descHTML = item.descTalent;
 
+            item.descHTML = item.descHTML.split("[CON]").join('<i class="fas fa-head-side-brain"></i>');
+            item.descHTML = item.descHTML.split("[RANK]").join('<i class="fas fa-diamond"></i>');
+            item.descHTML = item.descHTML.split("[USE]").join('<i class="far fa-circle"></i>');
+            item.descHTML = item.descHTML.split("\n").join('<br/>');
 
+          }
+          item.rank.html = "";
+
+          //Rank HTML
+          for (let i = 0; i < item.rank.max; i++) {
+            if (i < item.rank.value){
+              item.rank.html += '<i class="fas fa-diamond"></i>';
+            }
+            else{
+              item.rank.html += '<i class="far fa-diamond"></i>';
+            }
+          }
+        }
+
+        if(item.sheet.rotation == undefined)
+        item.sheet.rotation = 0;
+
+        item.size.aspect = (item.sheet.rotation == -90 ? (item.size.width > item.size.height ? item.size.width / item.size.height : item.size.height / item.size.width) : 1);
+
+        item.sheet.curHeight = (item.sheet.rotation == -90 ? item.size.width : item.size.height);
+        item.sheet.curWidth = (item.sheet.rotation == -90 ? item.size.height : item.size.width);
+
+        item.size.x = (item.sheet.curWidth * 8 + item.sheet.curWidth) + "em";
+        item.size.y = (item.sheet.curHeight * 8 + item.sheet.curHeight) + "em";
+
+        let roundScale = 5;
+        let xPos = Math.round(item.sheet.currentX / roundScale) * roundScale;
+        let yPos = Math.round(item.sheet.currentY / roundScale) * roundScale;
+        item.sheet.currentX = xPos;
+        item.sheet.currentY = yPos;
+        item.sheet.zIndex = xPos + yPos + 1000;
+
+        gear.push(i);
+      }
     }
+    // Assign and return
+    actorData.gear = gear;
+    actorData.skills = skills;
+  }
 
     //   /** @override */
     //   async _render(force=false, options={}) {
@@ -151,194 +193,278 @@ export class EsoterraStorageSheet extends ActorSheet {
     //     return super._render(force, options);
     //   }
 
-    /** @override */
-    activateListeners(html) {
-        super.activateListeners(html);
+  /** @override */
+  activateListeners(html) {
+    super.activateListeners(html);
 
-        // Everything below here is only needed if the sheet is editable
-        if (!this.options.editable) return;
+    // Everything below here is only needed if the sheet is editable
+    if (!this.options.editable) return;
 
-        // Update Inventory Item
-        html.find('.item-equip').click(ev => {
-            const li = $(ev.currentTarget).parents(".item");
-            const item = duplicate(this.actor.getEmbeddedDocument("Item", li.data("itemId")))
+    // Update Inventory Item
+    html.find('.item-equip').click(ev => {
+      const li = $(ev.currentTarget).parents(".item");
+      const item = duplicate(this.actor.getEmbeddedDocument("Item", li.data("itemId")))
 
-            item.data.equipped = !item.data.equipped;
-            this.actor.updateEmbeddedDocuments('Item', [item]);
-        });
+      item.data.equipped = !item.data.equipped;
+      this.actor.updateEmbeddedDocuments('Item', [item]);
+    });
 
+    // Add Inventory Item
+    html.find('.item-create').click(ev => {
 
-        // Add Inventory Item
-        html.find('.item-create').click(ev => {
+      let creatableItems = ['item', 'weapon', 'spell', 'armor', 'condition', 'storage'];
+      let selectList = "";
 
-            let creatableItems = ['item', 'weapon', 'spell', 'armor', 'condition', 'storage'];
-            let selectList = "";
+      creatableItems.forEach(type => selectList += "<option value='" + type + "'>" + type + "</option>")
 
-            creatableItems.forEach(type => selectList += "<option value='" + type + "'>" + type + "</option>")
-
-            //Select the stat of the roll.
-            let t = new Dialog({
-                title: "Select Stat",
-                content: "<h2> Item Type </h2> <select style='margin-bottom:10px;'name='type' id='type'> " + selectList + "</select> <br/>",
-                buttons: {
-                    roll: {
-                        icon: '<i class="fas fa-check"></i>',
-                        label: "Create",
-                        callback: (html) => this._onItemCreate(ev, html.find('[id=\"type\"]')[0].value)
-                    },
-                    cancel: {
-                        icon: '<i class="fas fa-times"></i>',
-                        label: "Cancel",
-                        callback: () => { }
-                    }
-                },
-                default: "roll",
-                close: () => { }
-            });
-            t.render(true);
-        });
-
-        // Update Inventory Item
-        html.find('.item-edit').click(ev => {
-            const li = $(ev.currentTarget).parents(".item");
-            const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
-            item.sheet.render(true);
-        });
-
-        // Delete Inventory Item
-        html.find('.item-delete').click(ev => {
-            const li = $(ev.currentTarget).parents(".item");
-            this.actor.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
-            li.slideUp(200, () => this.render(false));
-        });
-
-        // Rotate Inventory Item
-        html.find('.item-rotate').click(ev => {
-            const li = ev.currentTarget.closest(".item");
-            const item = duplicate(this.actor.getEmbeddedDocument("Item", li.dataset.itemId))
-            if (item.data.sheet.rotation == -90)
-                item.data.sheet.rotation = 0;
-            else
-                item.data.sheet.rotation = -90;
-            this.actor.updateEmbeddedDocuments('Item', [item]);
-        });
-
-        // Rollable Attributes
-        html.find('.stat-roll').click(ev => {
-            const div = $(ev.currentTarget);
-            const statName = div.data("key");
-            const attribute = this.actor.data.data.stats[statName];
-            this.actor.rollStat(attribute);
-        });
-
-        // Rollable Item/Anything with a description that we want to click on.
-        html.find('.item-roll').click(ev => {
-            const li = ev.currentTarget.closest(".item");
-            this.actor.rollItem(li.dataset.itemId, {
-                event: ev
-            });
-        });
-
-        // If we have an item input being adjusted from the character sheet.
-        html.on('change', '.item-input', ev => {
-            const li = ev.currentTarget.closest(".item");
-            const item = duplicate(this.actor.getEmbeddedDocument("Item", li.dataset.itemId))
-            const input = $(ev.currentTarget);
-
-            item[input[0].name] = input[0].value;
-
-            this.actor.updateEmbeddedDocuments('Item', [item]);
-        });
-
-        html.on('mousedown', '.pip-button', ev => {
-            const li = ev.currentTarget.closest(".item");
-            const item = duplicate(this.actor.getEmbeddedDocument("Item", li.dataset.itemId))
-
-            let amount = item.data.pips.value;
-
-            if (event.button == 0) {
-                if (amount < item.data.pips.max) {
-                    item.data.pips.value = Number(amount) + 1;
-                }
-            } else if (event.button == 2) {
-                if (amount > 0) {
-                    item.data.pips.value = Number(amount) - 1;
-                }
-            }
-
-            this.actor.updateEmbeddedDocuments('Item', [item]);
-        });
+      //Select the stat of the roll.
+      let t = new Dialog({
+        title: "Select Stat",
+        content: "<h2> Item Type </h2> <select style='margin-bottom:10px;'name='type' id='type'> " + selectList + "</select> <br/>",
+        buttons: {
+          roll: {
+            icon: '<i class="fas fa-check"></i>',
+            label: "Create",
+            callback: (html) => this._onItemCreate(ev, html.find('[id=\"type\"]')[0].value)
+          },
+          cancel: {
+            icon: '<i class="fas fa-times"></i>',
+            label: "Cancel",
+            callback: () => { }
+          }
+        },
+        default: "roll",
+        close: () => { }
+      });
+      t.render(true);
+    });
 
 
-        html.on('mousedown', '.damage-swap', ev => {
-            const li = ev.currentTarget.closest(".item");
-            const item = duplicate(this.actor.getEmbeddedDocument("Item", li.dataset.itemId))
+    // Update Inventory Item
+    html.find('.item-edit').click(ev => {
+      const li = $(ev.currentTarget).parents(".item");
+      const item = this.actor.getEmbeddedDocument("Item",li.data("itemId"));
+      item.sheet.render(true);
+    });
 
-            let d1 = item.data.weapon.dmg1;
-            let d2 = item.data.weapon.dmg2;
+    // Delete Inventory Item
+    html.find('.item-delete').click(ev => {
+      const li = $(ev.currentTarget).parents(".item");
+      this.actor.deleteEmbeddedDocuments("Item",[li.data("itemId")]);
+      li.slideUp(200, () => this.render(false));
+    });
 
-            item.data.weapon.dmg1 = d2;
-            item.data.weapon.dmg2 = d1;
-            this.actor.updateEmbeddedDocuments('Item', [item]);
-        });
-
-
-
-        // Drag events for macros.
-        if (this.actor.isOwner) {
-            let handler = ev => this._onDragItemStart(ev);
-
-            html.find('li.dropitem').each((i, li) => {
-                if (li.classList.contains("inventory-header")) return;
-                li.setAttribute("draggable", true);
-                li.addEventListener("dragstart", handler, false);
-            });
-
-            html.find('div.dropitem').each((i, div) => {
-                if (div.classList.contains("inventory-header")) return;
-                div.setAttribute("draggable", true);
-                div.addEventListener("dragstart", handler, false);
-            });
+    // Rotate Inventory Item
+    html.find('.item-rotate').click(ev => {
+      const li = ev.currentTarget.closest(".item");
+      const item = duplicate(this.actor.getEmbeddedDocument("Item", li.dataset.itemId))
+      if(item.data.sheet.rotation == -90)
+        item.data.sheet.rotation = 0;
+      else
+        item.data.sheet.rotation = -90;
+        this.actor.updateEmbeddedDocuments('Item', [item]);
+    });
 
 
-            // Item Card handler
+    // Rollable Attributes
+    html.find('.stat-roll').click(ev => {
+      const div = $(ev.currentTarget);
+      const statName = div.data("key");
+      const attribute = this.actor.data.data.stats[statName];
+      this.actor.rollStat(attribute);
+    });
 
-            // html.find('div.dragItems').each((i, dragItem) => {
+    // Rollable Attributes
+    html.find('.skill-roll').click(ev => {
+      const li = ev.currentTarget.closest(".item");
+      const div = $(ev.currentTarget);
+      const type = div.data("key");
+      // const attribute = this.actor.data.data.stats[statName];
+      this.actor.rollItem(li.dataset.itemId, {event: ev}, type);
+    });
 
-            //     const item = duplicate(this.actor.getEmbeddedDocument("Item", dragItem.dataset.itemId))
-            //     // let dragItem = document.querySelector("#" + container.dataset.itemId);
-            //     var curIndex = 1; //The current zIndex
+    // Rollable Attributes
+    html.find('.risk-roll').click(ev => {
+      const div = $(ev.currentTarget);
+      this.actor.rollRisk();
+    });
 
-            //     if (item.data.sheet == undefined) {
-            //         item.data.sheet = {
-            //             "active": false,
-            //             "currentX": 0,
-            //             "currentY": 0,
-            //             "initialX": 0,
-            //             "initialY": 0,
-            //             "xOffset": 0,
-            //             "yOffset": 0
-            //         };
-            //     }
+    // Rollable Item/Anything with a description that we want to click on.
+    html.find('.item-roll').click(ev => {
+      const li = ev.currentTarget.closest(".item");
+      this.actor.rollItem(li.dataset.itemId, {
+        event: ev
+      });
+    });
 
-            //     console.log("Item Position Update");
-            //     setTranslate(item.data.sheet.currentX, item.data.sheet.currentY, dragItem, true);
-            //     dragItem.style.zIndex = item.data.sheet.currentX + 500;
+    // If we have an item input being adjusted from the character sheet.
+    html.on('change', '.item-input', ev => {
+      const li = ev.currentTarget.closest(".item");
+      const item = duplicate(this.actor.getEmbeddedDocument("Item", li.dataset.itemId))
+      const input = $(ev.currentTarget);
 
-            //     function setTranslate(xPos, yPos, el, round = false) {
+      item[input[0].name] = input[0].value;
 
-            //         if (round) {
-            //             let roundScale = 5;
-            //             xPos = Math.round(xPos / roundScale) * roundScale;
-            //             yPos = Math.round(yPos / roundScale) * roundScale;
-            //         }
-            //         el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
-            //     }
-            // });
+      this.actor.updateEmbeddedDocuments('Item', [item]);
+    });
+
+    html.on('mousedown', '.pip-button', ev => {
+      const li = ev.currentTarget.closest(".item");
+      const item = duplicate(this.actor.getEmbeddedDocument("Item", li.dataset.itemId))
+
+      let amount = item.data.pips.value;
+
+      if (event.button == 0) {
+        if (amount < item.data.pips.max && (amount < item.data.pips.level || item.data.pips.level == 0)) {
+          item.data.pips.value = Number(amount) + 1;
         }
+      } else if (event.button == 2) {
+        if (amount > 0) {
+          item.data.pips.value = Number(amount) - 1;
+        }
+      }
+
+      this.actor.updateEmbeddedDocuments('Item', [item]);
+    });
+
+    html.on('mousedown', '.rank-button', ev => {
+      const li = ev.currentTarget.closest(".item");
+      const item = duplicate(this.actor.getEmbeddedDocument("Item", li.dataset.itemId))
+
+      let amount = item.data.rank.value;
+
+      if (event.button == 0) {
+        if (amount < item.data.rank.max) {
+          item.data.rank.value = Number(amount) + 1;
+        }
+      } else if (event.button == 2) {
+        if (amount > 0) {
+          item.data.rank.value = Number(amount) - 1;
+        }
+      }
+
+      this.actor.updateEmbeddedDocuments('Item', [item]);
+    });
+
+    html.on('mousedown', '.char-pip-button', ev => {
+      const data = super.getData();
+
+      const div = $(ev.currentTarget);
+      const targetName = div.data("key");
+      const attribute = data.data.data[targetName];
+
+      let amount = attribute.value;
+      let max = div.data("max");
+      let min = div.data("min");
+
+      if (event.button == 0) {
+        if (amount < max) {
+          attribute.value = Number(amount) + 1;
+        }
+      } else if (event.button == 2) {
+        if (amount > min) {
+          attribute.value = Number(amount) - 1;
+        }
+      }
+
+      let updated = {
+        html: '',
+        value: attribute.value
+      }
+
+      if(targetName == 'threats'){
+        updated.html = '';
+        for(let i = 0; i < 6; i ++){
+          if(i >= updated.value)
+          updated.html += '<div class="diamond"></div>';
+          else
+          updated.html += '<div class="diamond-f"></div>';
+        }
+      } else if (targetName == 'assets') {
+        updated.html = '';
+        for(let i = 0; i < 6; i ++){
+          if(i >= updated.value)
+          updated.html += '<div class="circle"></div>';
+          else
+          updated.html += '<div class="circle-f"></div>';
+        }
+      } else if (targetName == 'xp') {
+        updated.html = '';
+        for(let i = 0; i < 8; i ++){
+          if(i >= updated.value)
+          updated.html += '<div class="circle"></div>';
+          else
+          updated.html += '<div class="circle-f"></div>';
+        }
+      }
 
 
+      // superData.assets.html = '';
+      // for(let i = 0; i < 6; i ++){
+      //   if(i >= superData.assets.value)
+      //   superData.assets.html += '<div class="circle"></div>';
+      //   else
+      //   superData.assets.html += '<div class="circle-f"></div>';
+      // }
+  
+      // superData.threats.html = '';
+      // for(let i = 0; i < 6; i ++){
+      //   if(i >= superData.threats.value)
+      //   superData.threats.html += '<div class="diamond"></div>';
+      //   else
+      //   superData.threats.html += '<div class="diamond-f"></div>';
+      // }
+      // superData.xp.html = '';
+      // for(let i = 0; i < 8; i ++){
+      //   if(i >= superData.xp.value)
+      //   superData.xp.html += '<div class="circle"></div>';
+      //   else
+      //   superData.xp.html += '<div class="circle-f"></div>';
+      // }
+
+      const updateString = "data."+targetName;
+
+      this.actor.update({[updateString] : updated});
+
+
+      // this.actor.update();
+      // this.actor.updateEmbeddedDocuments();
+    });
+
+
+    html.on('mousedown', '.damage-swap', ev => {
+      const li = ev.currentTarget.closest(".item");
+      const item = duplicate(this.actor.getEmbeddedDocument("Item", li.dataset.itemId))
+
+      let d1 = item.data.weapon.dmg1;
+      let d2 = item.data.weapon.dmg2;
+
+      item.data.weapon.dmg1 = d2;
+      item.data.weapon.dmg2 = d1;
+      this.actor.updateEmbeddedDocuments('Item', [item]);
+    });
+
+
+    // Drag events for macros.
+    if (this.actor.isOwner) {
+      let handler = ev => this._onDragItemStart(ev);
+      let dragEnd = ev => this._onDragOver(ev);
+
+      html.find('li.dropitem').each((i, li) => {
+        if (li.classList.contains("inventory-header")) return;
+        li.setAttribute("draggable", true);
+        li.addEventListener("dragstart", handler, false);
+      });
+
+      html.find('div.dropitem').each((i, div) => {
+        if (div.classList.contains("inventory-header")) return;
+        div.setAttribute("draggable", true);
+        div.addEventListener("dragstart", handler, false);
+        div.addEventListener("dragend", dragEnd, false);
+
+      });
     }
+  }
 
     /* -------------------------------------------- */
 

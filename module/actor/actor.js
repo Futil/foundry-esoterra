@@ -19,6 +19,7 @@ export class EsoterraActor extends Actor {
     if (actorData.type === 'character') this._prepareCharacterData(actorData);
     else if (actorData.type === 'hireling') this._prepareCharacterData(actorData);
     else if (actorData.type === 'creature') this._prepareCharacterData(actorData);
+    else if (actorData.type === 'mook') this._prepareCharacterData(actorData);
 
   }
   /**

@@ -267,11 +267,21 @@
 .esoterra .header-grid-creature {
   display: grid;
   grid-template-areas:
-  'header header header'
-  'abilities centercol centercol ';
-  grid-gap: 10px;
-  padding: 10px;
-  grid-template-columns: 15em auto 14em;
+      'header header header'
+      'abilities centercol centercol ';
+  grid-gap: 4px;
+  padding: 2px;
+  grid-template-columns: 14em auto 9em;
+}
+
+.esoterra .header-grid-vehicle {
+  display: grid;
+  grid-template-areas:
+      'header header header'
+      'abilities centercol rightcol ';
+  grid-gap: 4px;
+  padding: 2px;
+  grid-template-columns: auto auto auto;
 }
 
 .esoterra .abilities {grid-area: abilities;}
@@ -530,7 +540,19 @@
 
 .esoterra .blockborder{
   border: 2px solid #111;
-  /* border-radius: 0 0.7em 0; */
+  border-radius: 0 0.7em 0;
+  background: linear-gradient(90deg , rgba(22,22,22,1) 0%, rgba(22,22,22,1) 37%,rgba(255,255,255,1) 20%, rgba(255,255,255,1) 100%);
+}
+
+.esoterra .blockborderwhite{
+  border: 2px solid #111;
+  border-radius: 0 0.7em 0;
+  background: white;
+}
+
+.esoterra .blockbordergrey{
+  border: 2px solid #111;
+  border-radius: 1em;
   background: linear-gradient(90deg , rgba(22,22,22,1) 0%, rgba(22,22,22,1) 37%,rgba(255,255,255,1) 20%, rgba(255,255,255,1) 100%);
 }
 
@@ -678,6 +700,7 @@
   border: 2px solid #111;
   background: 0;
   transform: rotateZ(45deg);
+  background: white;
 }
 
 .esoterra .defensewrapper{
@@ -755,7 +778,7 @@
 
 .esoterra .littleLabel{
   font-family: 'Bebas Neue', Garamond;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   text-align: center;
   margin: auto;
   flex: 0.6;
@@ -948,6 +971,16 @@
   overflow: auto;
   height: 375px;
 }
+
+.esoterra .creature-assetgrid{
+  display: grid;
+    grid-template-areas:
+        'assets risk'
+        'threats risk';
+    grid-gap: 4px;
+    padding: 2px;
+}
+
 
 .esoterra .ship-stats-grid{
   display: grid;

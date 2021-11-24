@@ -3,16 +3,17 @@
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
  */
-export class EsoterraCreatureSheet extends ActorSheet {
+ export class EsoterraVehicleSheet extends ActorSheet {
 
     /** @override */
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
-            classes: ["esoterra", "sheet", "actor", "creature"],
-            template: "systems/esoterra/templates/actor/creature-sheet.html",
-            width: 650,
-            height: 750,
-            tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "character" }]
+            classes: ["esoterra", "sheet", "actor", "vehicle"],
+            template: "systems/esoterra/templates/actor/vehicle-sheet.html",
+            width: 475,
+            height: 500,
+            resizable: false,
+            tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "vehicle" }]
         });
     }
 
@@ -23,48 +24,41 @@ export class EsoterraCreatureSheet extends ActorSheet {
         const data = super.getData();
         data.dtypes = ["String", "Number", "Boolean"];
 
-        const superData = data.data.data;
-
-        if (this.actor.data.type == 'creature') {
-
-            // Initialization run.
-            // if(!superData.initialized){
-            //   console.log("Initializing Character Sheet");
-            if(superData.assets.html == ''){
-                for(let i = 0; i < 6; i ++){
-                if(i >= superData.assets.value)
-                superData.assets.html += '<div class="circle"></div>';
-                else
-                superData.assets.html += '<div class="circle-f"></div>';
-                }
-            }
-            
-            if(superData.threats.html == ''){
-                for(let i = 0; i < 6; i ++){
-                if(i >= superData.threats.value)
-                superData.threats.html += '<div class="diamond"></div>';
-                else
-                superData.threats.html += '<div class="diamond-f"></div>';
-                }
-            }
-            if(superData.xp.html == ''){
-                for(let i = 0; i < 8; i ++){
-                if(i >= superData.xp.value)
-                superData.xp.html += '<div class="circle"></div>';
-                else
-                superData.xp.html += '<div class="circle-f"></div>';
-                }
-            }
-            //   superData.initialized = true;
-
-            //   this.actor.update({[superData] : superData});
-            // }
+        // Prepare items.
+        if (this.actor.data.type == 'vehicle') {
             this._prepareCharacterItems(data);
         }
 
+
         if (data.data.settings == null) {
-        data.data.settings = {};
+            data.data.settings = {};
         }
+
+        data.data.data.storeDiv = "";
+        data.data.data.size.divWidth = data.data.data.size.width * 130 + 35;
+        data.data.data.size.divHeight = data.data.data.size.height * 130 + 35;
+
+        let storenum = 0;
+        for (let y = 0; y < data.data.data.size.height; y++) {
+            for (let x = 0; x < data.data.data.size.width; x++) {
+                storenum++;
+                data.data.data.storeDiv += '\
+                <div class="item-slot-dashed" style="transform: translate3d('+ (x * 130 - (data.data.data.size.width - 1) * 65) + 'px, ' + (y * 130 - (data.data.data.size.height - 1) * 65) + 'px, 0px);">\
+                    <div class="item-bag-text">\
+                        '+ storenum + '\
+                    </div>\
+                </div>';
+            }
+        }
+
+        let windowWidth = data.data.data.size.width * 130 + 80;
+        if(windowWidth < 550){
+            windowWidth = 550;
+        }
+
+        this.position.width = windowWidth;
+        this.position.height = data.data.data.size.height * 130 + 350;
+
 
         return data.data;
     }
@@ -182,7 +176,7 @@ export class EsoterraCreatureSheet extends ActorSheet {
         item.size.x = (item.sheet.curWidth * 8 + item.sheet.curWidth) + "em";
         item.size.y = (item.sheet.curHeight * 8 + item.sheet.curHeight) + "em";
 
-        let roundScale = 2;
+        let roundScale = 5;
         let xPos = Math.round(item.sheet.currentX / roundScale) * roundScale;
         let yPos = Math.round(item.sheet.currentY / roundScale) * roundScale;
         item.sheet.currentX = xPos;
@@ -196,6 +190,13 @@ export class EsoterraCreatureSheet extends ActorSheet {
     actorData.gear = gear;
     actorData.skills = skills;
   }
+
+    //   /** @override */
+    //   async _render(force=false, options={}) {
+    //     if ( force ) this.token = options.token || null;
+    //     return super._render(force, options);
+    //   }
+
   /** @override */
   activateListeners(html) {
     super.activateListeners(html);
@@ -436,39 +437,41 @@ export class EsoterraCreatureSheet extends ActorSheet {
 
 
     html.on('mousedown', '.damage-swap', ev => {
-        const li = ev.currentTarget.closest(".item");
-        const item = duplicate(this.actor.getEmbeddedDocument("Item", li.dataset.itemId))
-  
-        let d1 = item.data.weapon.dmg1;
-        let d2 = item.data.weapon.dmg2;
-  
-        item.data.weapon.dmg1 = d2;
-        item.data.weapon.dmg2 = d1;
-        this.actor.updateEmbeddedDocuments('Item', [item]);
+      const li = ev.currentTarget.closest(".item");
+      const item = duplicate(this.actor.getEmbeddedDocument("Item", li.dataset.itemId))
+
+      let d1 = item.data.weapon.dmg1;
+      let d2 = item.data.weapon.dmg2;
+
+      item.data.weapon.dmg1 = d2;
+      item.data.weapon.dmg2 = d1;
+      this.actor.updateEmbeddedDocuments('Item', [item]);
+    });
+
+
+    // Drag events for macros.
+    if (this.actor.isOwner) {
+      let handler = ev => this._onDragItemStart(ev);
+      let dragEnd = ev => this._onDragOver(ev);
+
+      html.find('li.dropitem').each((i, li) => {
+        if (li.classList.contains("inventory-header")) return;
+        li.setAttribute("draggable", true);
+        li.addEventListener("dragstart", handler, false);
       });
-  
-  
-      // Drag events for macros.
-      if (this.actor.isOwner) {
-        let handler = ev => this._onDragItemStart(ev);
-        let dragEnd = ev => this._onDragOver(ev);
-  
-        html.find('li.dropitem').each((i, li) => {
-          if (li.classList.contains("inventory-header")) return;
-          li.setAttribute("draggable", true);
-          li.addEventListener("dragstart", handler, false);
-        });
-  
-        html.find('div.dropitem').each((i, div) => {
-          if (div.classList.contains("inventory-header")) return;
-          div.setAttribute("draggable", true);
-          div.addEventListener("dragstart", handler, false);
-          div.addEventListener("dragend", dragEnd, false);
-  
-        });
-      }
+
+      html.find('div.dropitem').each((i, div) => {
+        if (div.classList.contains("inventory-header")) return;
+        div.setAttribute("draggable", true);
+        div.addEventListener("dragstart", handler, false);
+        div.addEventListener("dragend", dragEnd, false);
+
+      });
     }
+  }
+
     /* -------------------------------------------- */
+
     /**
      * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset
      * @param {Event} event   The originating click event
@@ -555,37 +558,40 @@ export class EsoterraCreatureSheet extends ActorSheet {
 
 
 
+
+
+
     //The onDragItemStart event can be subverted to let you package additional data what you're dragging
     _onDragItemStart(event) {
         let itemId = event.currentTarget.getAttribute("data-item-id");
-  
+
         if (!itemId)
             return;
-  
+
         const clickedItem = duplicate(
             this.actor.getEmbeddedDocument("Item", itemId)
         );
-  
-  
+
+
         let it = $(event.currentTarget);
-  
+
         let width = it.outerWidth();
         let height = it.outerHeight();
         var x = event.pageX - it.offset().left - width / 2;
         var y = event.pageY - it.offset().top - height / 2;
-  
+
         let i = $('#' + itemId);
-  
+
         // i.fadeOut(150);
-  
+
         // setTimeout(function(){
         //   $('#'+itemId)[0].style.visibility = "hidden";
         // }, 1);
         // console.log(event);
-  
+
         clickedItem.data.stored = "";
         const item = clickedItem;
-  
+
         event.dataTransfer.setData(
             "text/plain",
             JSON.stringify({
@@ -603,25 +609,25 @@ export class EsoterraCreatureSheet extends ActorSheet {
             })
         );
     }
-  
+
     //Call this when an item is dropped.
     _onDragOver(event) {
         // let itemId = event.currentTarget.getAttribute("data-item-id");
-  
+
         // if(!itemId)
         //   return;
-  
+
         // let item = $('#'+itemId);
-  
+
         // if(item == null)
         //   return;
-  
+
         // item.fadeIn(150);
         // setTimeout(function(){
         //   item.style.visibility = "visible";
         // }, 100);
     }
-  
+
     /**
      * Handle dropping of an item reference or item data onto an Actor Sheet
      * @param {DragEvent} event     The concluding DragEvent which contains drop data
@@ -633,37 +639,37 @@ export class EsoterraCreatureSheet extends ActorSheet {
         if (!this.actor.isOwner) return false;
         const item = await Item.fromDropData(data);
         const itemData = duplicate(item.data);
-  
+
         // Handle item sorting within the same Actor
         const actor = this.actor;
-  
+
         let it = $(event.target);
-        if(it.attr('id') != "drag-area"){
+        if (it.attr('id') != "drag-area") {
             it = it.parents("#drag-area")
         }
-  
+
         var x = 0;
         var y = 0;
-  
-  
-        if(it.length){
+
+
+        if (it.length) {
             let width = it.outerWidth();
             let height = it.outerHeight();
-    
+
             x = event.pageX - it.offset().left - width / 2;
             y = event.pageY - it.offset().top - height / 2;
         }
         // let width = $('#drag-area-' + actor.id).outerWidth();
         // let height = $('#drag-area-' + actor.id).outerHeight();
-    
+
         // var x = event.pageX - $('#drag-area-' + actor.id).offset().left - width / 2;
         // var y = event.pageY - $('#drag-area-' + actor.id).offset().top - height / 2;
-        
+
         // if (Math.abs(x) > Math.abs(width / 2) || Math.abs(y) > Math.abs(height / 2)) {
         //     x = 0;
         //     y = 0;
         // }
-  
+
         let sameActor = (data.actorId === actor.id) || (actor.isToken && (data.tokenId === actor.token.id));
         if (sameActor && !(event.ctrlKey)) {
             let i = duplicate(actor.getEmbeddedDocument("Item", data.itemId))
@@ -679,12 +685,13 @@ export class EsoterraCreatureSheet extends ActorSheet {
             return;
             //return this._onSortItem(event, itemData);
         }
-  
+
+
         if (data.actorId && !(event.ctrlKey) && !data.fromToken && !this.actor.isToken) {
             let oldActor = game.actors.get(data.actorId);
-            oldActor.deleteEmbeddedDocuments("Item",[data.itemId]);
+            oldActor.deleteEmbeddedDocuments("Item", [data.itemId]);
         }
-  
+
         if (!data.offset) {
             data.offset = {
                 x: 0,
@@ -699,8 +706,9 @@ export class EsoterraCreatureSheet extends ActorSheet {
             xOffset: x - data.offset.x,
             yOffset: y - data.offset.y
         };
-  
+
         // Create the owned item
         return this._onDropItemCreate(itemData);
     }
+
 }
